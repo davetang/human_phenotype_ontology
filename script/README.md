@@ -15,6 +15,7 @@ gzip hp.obo
 
 Format documented at <http://human-phenotype-ontology.github.io/documentation.html>
 
+~~~~{.bash}
 Column  Content Required        Example
 1       DB      required        MIM
 2       DB_Object_ID    required        154700
@@ -30,6 +31,9 @@ Column  Content Required        Example
 12      Synonym optional        ACG1B|Achondrogenesis, Fraccaro type
 13      Date    required        YYYY.MM.DD
 14      Assigned by     required        HPO
+~~~~
+
+Check out the first line:
 
 ~~~~{.bash}
 gunzip -c phenotype_annotation.tab.gz | cat -T | head -1 | sed 's/\^I/\n/g' | nl -ba

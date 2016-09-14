@@ -53,6 +53,8 @@ while(<IN>){
 }
 close(IN);
 
+my $phenolyzer_input = '';
+
 foreach my $h (@ARGV){
    $h =~ s/^OMIM://;
    
@@ -63,11 +65,13 @@ foreach my $h (@ARGV){
    foreach my $n (@{$lookup{$h}}){
       next if exists $check{$n};
       $check{$n} = 1;
+      $phenolyzer_input .= "$n;";
       ++$counter;
       my $term = hpo::hpo_to_term($n);
       print "\t$n\t$term\n";
    }
    print "$counter HPO terms\n\n";
+   print "$phenolyzer_input\n\n";
 }
 
 __END__
