@@ -95,3 +95,64 @@ HP:0007359
 HP:0007359      15
 ~~~~
 
+## OMIM ID to HPO terms
+
+Takes an OMIM ID from the command line.
+
+~~~~{.bash}
+omim_to_hpo.pl 147920
+OMIM:147920     #147920 KABUKI SYNDROME 1; KABUK1;;KABUKI SYNDROME;;KABUKI MAKE-UP SYNDROME; KMS;;NIIKAWA-KUROKI SYNDROME
+        HP:0000006      autosomal dominant inheritance
+        HP:0000028      cryptorchidism
+        HP:0000054      micropenis
+        HP:0000074      ureteropelvic junction obstruction
+        HP:0000164      abnormality of the teeth
+        HP:0000175      cleft palate
+        HP:0000218      high palate
+        HP:0000252      microcephaly
+        HP:0000358      posteriorly rotated ears
+        HP:0000365      hearing impairment
+        HP:0000400      macrotia
+        HP:0000403      recurrent otitis media
+        HP:0000431      wide nasal bridge
+        HP:0000437      depressed nasal tip
+        HP:0000486      strabismus
+        HP:0000508      ptosis
+        HP:0000535      sparse eyebrow
+        HP:0000592      blue sclerae
+        HP:0000637      long palpebral fissure
+        HP:0000851      congenital hypothyroidism
+        HP:0000957      cafe-au-lait spot
+        HP:0001007      hirsutism
+        HP:0001212      prominent fingertip pads
+        HP:0001249      intellectual disability
+        HP:0001250      seizures
+        HP:0001252      muscular hypotonia
+        HP:0001263      global developmental delay
+        HP:0001374      congenital hip dislocation
+        HP:0001382      joint hypermobility
+        HP:0001629      ventricular septal defect
+        HP:0001631      atria septal defect
+        HP:0001680      coarctation of aorta
+        HP:0001878      hemolytic anemia
+        HP:0001973      autoimmune thrombocytopenia
+        HP:0002023      anal atresia
+        HP:0002024      malabsorption
+        HP:0002025      anal stenosis
+        HP:0002100      recurrent aspiration pneumonia
+        HP:0002553      highly arched eyebrow
+        HP:0002566      intestinal malrotation
+        HP:0002650      scoliosis
+        HP:0003468      abnormality of the vertebrae
+        HP:0004322      short stature
+        HP:0004467      preauricular pit
+        HP:0004736      crossed fused renal ectopia
+        HP:0005218      anoperineal fistula
+        HP:0007655      eversion of lateral third of lower eyelids
+        HP:0008872      feeding difficulties in infancy
+        HP:0008897      postnatal growth retardation
+        HP:0009237      short 5th finger
+        HP:0010314      premature thelarche
+51 HPO terms
+
+~~~~
