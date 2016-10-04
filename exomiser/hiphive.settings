@@ -1,0 +1,6 @@
+vcf=data/Pfeiffer.vcf
+prioritiser=hiphive
+max-freq=1.0
+hpo-ids=HP:0001156, HP:0001363, HP:0011304, HP:0010055
+out-prefix=../results/pfeiffer_hiphive
+out-format=TSV-GENE,TSV-VARIANT,VCF,HTML

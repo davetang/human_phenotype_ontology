@@ -1,0 +1,6 @@
+vcf=data/Pfeiffer.vcf
+prioritiser=exomewalker
+seed-genes=2260,2246,2253
+max-freq=1.0
+out-prefix=../results/pfeiffer_exomewalker
+out-format=TSV-GENE,TSV-VARIANT,VCF,HTML
