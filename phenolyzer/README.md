@@ -60,3 +60,22 @@ HP:0010055      level 7
         wide big toe
 ~~~~
 
+How many disorders are these HPO IDs associated with?
+
+~~~~{.bash}
+cd ../script
+hpo_to_disease.pl HP:0001156 HP:0001363 HP:0011304 HP:0010055 | grep "^HP"
+HP:0001156
+HP:0001156      414
+HP:0001363
+HP:0001363      115
+HP:0011304
+HP:0011304      39
+HP:0010055
+HP:0010055      37
+~~~~
+
+# Remarks
+
+Phenolyzer is able to prioritise FGFR2, which is the gene associated with Pfeiffer syndrome, using four HPO IDs associated with Pfeiffer syndrome. The four HPO IDs are quite specific (average level of 7.5) and broad thumbs and big toes are associated with only 39 and 37 Mendelian diseases respectively.
+

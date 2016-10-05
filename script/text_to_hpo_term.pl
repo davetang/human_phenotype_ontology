@@ -17,7 +17,9 @@ my $usage = "Usage: $0 <infile.txt>\n";
 my $infile = shift or die $usage;
 
 # download from http://purl.obolibrary.org/obo/hp.obo
-my $obo = 'hp.obo.gz';
+my $script_path = $0;
+$script_path =~ s/\w+\.pl$//;
+my $obo = $script_path . 'hp.obo.gz';
 my $id = '';
 my %lookup = ();
 open(IN,'-|',"gunzip -c $obo") || die "Could not open $obo: $!\n";

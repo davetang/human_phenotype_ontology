@@ -11,8 +11,10 @@ my $usage = "Usage: $0 <OMIM ID> [OMIM IDs]\n";
 if (scalar(@ARGV) == 0){
    die $usage;
 }
-
-my $disease = 'phenotype_annotation.tab.gz';
+# download from http://purl.obolibrary.org/obo/hp.obo
+my $script_path = $0;
+$script_path =~ s/\w+\.pl$//;
+my $disease = $script_path . 'phenotype_annotation.tab.gz';
 
 =head1 Columns in annotation file
 1       DB      required        MIM
