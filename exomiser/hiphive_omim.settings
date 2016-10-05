@@ -1,0 +1,6 @@
+vcf=data/Pfeiffer.vcf
+prioritiser=hiphive
+max-freq=1.0
+disease-id=101600
+out-prefix=../results/pfeiffer_hiphive_omim
+out-format=TSV-GENE,TSV-VARIANT,VCF,HTML

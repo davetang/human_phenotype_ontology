@@ -1,12 +1,14 @@
 #!/usr/bin/env perl
 
-package hpo;
 require Exporter;
+package hpo;
 @ISA = qw(Exporter);
 @EXPORT_OK = qw/hpo_to_name hpo_to_synonym hpo_to_level/;
 
 # download from http://purl.obolibrary.org/obo/hp.obo
-my $obo = 'hp.obo.gz';
+my $script_path = $0;
+$script_path =~ s/\w+\.pl$//;
+my $obo = $script_path . 'hp.obo.gz';
 my $id = '';
 # HPO ID has hash key
 # scalar references: ISA, NAME, and SYN for attributes of HPO
@@ -58,14 +60,23 @@ close(IN);
 # return the full name of a HPO ID
 sub hpo_to_name {
    my ($hpo) = @_;
-   return($lookup{$hpo}->{'NAME'});
+   if (exists $lookup{$hpo}){
+      return($lookup{$hpo}->{'NAME'});
+   } else {
+      return("No name for $hpo\n");
+   }
 }
 
 # return synonym/s for a HPO ID
 sub hpo_to_synonym {
    my ($hpo) = @_;
    # return the of a HPO term
-   return($lookup{$hpo}->{'SYN'});
+   if (exists $lookup{$hpo}){
+      return($lookup{$hpo}->{'SYN'});
+   } else {
+      my @empty = ();
+      return(\@empty);
+   }
 }
 
 # return level for a HPO ID

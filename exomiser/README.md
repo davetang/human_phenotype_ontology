@@ -40,6 +40,17 @@ out-format=TSV-GENE,TSV-VARIANT,VCF,HTML
 
 java -jar exomiser-cli-7.2.1.jar --settings-file ../hiphive.settings
 
+# hiPHIVE with OMIM
+cat hiphive_omim.settings 
+vcf=data/Pfeiffer.vcf
+prioritiser=hiphive
+max-freq=1.0
+disease-id=101600
+out-prefix=../results/pfeiffer_hiphive_omim
+out-format=TSV-GENE,TSV-VARIANT,VCF,HTML
+
+java -jar exomiser-cli-7.2.1.jar --settings-file ../hiphive_omim.settings
+
 # PhenIX
 cat ../phenix.settings 
 vcf=data/Pfeiffer.vcf
@@ -66,6 +77,7 @@ cd ../results
 bgzip pfeiffer_exomewalker.vcf
 bgzip pfeiffer_hiphive.vcf
 bgzip pfeiffer_phenix.vcf
+bgzip pfeiffer_hiphive_omim.vcf
 gzip *.tsv
 ~~~~
 
@@ -83,6 +95,18 @@ DNASE1L2        1775    0.7037  0.7763  0.7606  0.0000
 COG7    91949   0.5012  1.0000  0.7514  0.0000
 SPAG9   9043    0.5007  1.0000  0.7503  0.0000
 MAPKBP1 23005   0.5446  0.9500  0.7497  0.0000
+
+gunzip -c pfeiffer_hiphive_omim.genes.tsv.gz | head
+#GENE_SYMBOL    ENTREZ_GENE_ID  EXOMISER_GENE_PHENO_SCORE       EXOMISER_GENE_VARIANT_SCORE     EXOMISER_GENE_COMBINED_SCORE    HUMAN_PHENO_SCORE       MOUSE_PHENO_SCORE       FISH_PHENO_SCORE        WALKER_SCORE    PHIVE_ALL_SPECIES_SCORE OMIM_SCORE      MATCHES_CANDIDATE_GENE  HUMAN_PHENO_EVIDENCE    MOUSE_PHENO_EVIDENCE    FISH_PHENO_EVIDENCE     HUMAN_PPI_EVIDENCE      MOUSE_PPI_EVIDENCE      FISH_PPI_EVIDENCE
+AXIN1   8312    0.0000  1.0000  0.0162  0.0000  0.0000  0.0000  0.0000  0.0000  1.0000  0
+COG7    91949   0.0000  1.0000  0.0162  0.0000  0.0000  0.0000  0.0000  0.0000  1.0000  0
+FGFR2   2263    0.0000  1.0000  0.0162  0.0000  0.0000  0.0000  0.0000  0.0000  1.0000  0
+FRMPD1  22844   0.0000  1.0000  0.0162  0.0000  0.0000  0.0000  0.0000  0.0000  1.0000  0
+HNF1A   6927    0.0000  1.0000  0.0162  0.0000  0.0000  0.0000  0.0000  0.0000  1.0000  0
+MND1    84057   0.0000  1.0000  0.0162  0.0000  0.0000  0.0000  0.0000  0.0000  1.0000  0
+OR7D2   162998  0.0000  1.0000  0.0162  0.0000  0.0000  0.0000  0.0000  0.0000  1.0000  0
+PTPRD   5789    0.0000  1.0000  0.0162  0.0000  0.0000  0.0000  0.0000  0.0000  1.0000  0
+RBP5    83758   0.0000  1.0000  0.0162  0.0000  0.0000  0.0000  0.0000  0.0000  1.0000  0
 
 gunzip -c pfeiffer_phenix.genes.tsv.gz | head
 #GENE_SYMBOL    ENTREZ_GENE_ID  EXOMISER_GENE_PHENO_SCORE       EXOMISER_GENE_VARIANT_SCORE     EXOMISER_GENE_COMBINED_SCORE    HUMAN_PHENO_SCORE       MOUSE_PHENO_SCORE       FISH_PHENO_SCORE        WALKER_SCORE    PHIVE_ALL_SPECIES_SCORE OMIM_SCORE      MATCHES_CANDIDATE_GENE  HUMAN_PHENO_EVIDENCE    MOUSE_PHENO_EVIDENCE    FISH_PHENO_EVIDENCE     HUMAN_PPI_EVIDENCE      MOUSE_PPI_EVIDENCE      FISH_PPI_EVIDENCE
