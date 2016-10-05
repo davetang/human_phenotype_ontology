@@ -60,7 +60,7 @@ close(IN);
 # return the full name of a HPO ID
 sub hpo_to_name {
    my ($hpo) = @_;
-   if (exists $lookup{$hpo}){
+   if (exists $lookup{$hpo}->{'NAME'}){
       return($lookup{$hpo}->{'NAME'});
    } else {
       return("No name for $hpo\n");
@@ -71,7 +71,7 @@ sub hpo_to_name {
 sub hpo_to_synonym {
    my ($hpo) = @_;
    # return the of a HPO term
-   if (exists $lookup{$hpo}){
+   if (exists $lookup{$hpo}->{'SYN'}){
       return($lookup{$hpo}->{'SYN'});
    } else {
       my @empty = ();

@@ -1,6 +1,15 @@
 HPO files
 =========
 
+Some of the scripts require the subroutines, i.e. functions, in the `hpo.pm` package file. If you are running the scripts in the same directory that `hpo.pm` resides, then Perl won't complain about being unable to find the `hpo` package; however, you may wish to run these scripts outside of this directory. There are several ways to tell Perl where to look for packages; I recommend setting the `PERL5LIB` variable in your shell. For the bash shell:
+
+~~~~{.bash}
+# you can also put this in your .bashrc file
+export PERL5LIB=/home/me/github/human_phenotype_ontology/script
+~~~~
+
+# Files to download
+
 See <http://human-phenotype-ontology.github.io/downloads.html>
 
 ~~~~{.bash}
