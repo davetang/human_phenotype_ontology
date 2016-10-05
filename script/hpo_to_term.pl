@@ -4,6 +4,7 @@
 
 use strict;
 use warnings;
+use hpo qw/hpo_to_name hpo_to_level hpo_to_synonym/;
 
 my $usage = "Usage: $0 <HPO term> [HPO terms]\n";
 
@@ -11,36 +12,15 @@ if (scalar(@ARGV) == 0){
    die $usage;
 }
 
-# download from http://purl.obolibrary.org/obo/hp.obo
-my $obo = 'hp.obo.gz';
-my $id = '';
-my %lookup = ();
-open(IN,'-|',"gunzip -c $obo") || die "Could not open $obo: $!\n";
-while(<IN>){
-   chomp;
-   if (/^id:\s(HP:\d+)/){
-      $id = $1;
-      # print "$id\n";
-   } elsif (/^name:\s(.*)$/){
-      my $name = lc($1);
-      $lookup{$id}[0] = $name;
-   } elsif (/^synonym:\s\"(.*)\"/){
-      my $synonym = lc($1);
-      my $index = scalar(@{$lookup{$id}});
-      $lookup{$id}[$index] = $synonym;
-   }
-
-}
-close(IN);
-
 foreach my $h (@ARGV){
-   print "$h\n";
-   if (exists $lookup{$h}){
-      foreach my $d (@{$lookup{$h}}){
-         print "\t$d\n";
-      }
-   } else {
-      print "\tNo match\n";
+   $h =~ s/,//g;
+   my $name  = hpo_to_name($h);
+   my $level = hpo_to_level($h);
+   print "$h\tlevel $level\n";
+   print "\t$name\n";
+   my $syn = hpo_to_synonym($h);
+   for (my $i = 0; $i < scalar(@{$syn}); ++$i){
+      print "\t$syn->[$i]\n";
    }
 }
 

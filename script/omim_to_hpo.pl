@@ -4,7 +4,7 @@
 
 use strict;
 use warnings;
-use hpo;
+use hpo qw/hpo_to_name/;
 
 my $usage = "Usage: $0 <OMIM ID> [OMIM IDs]\n";
 
@@ -67,7 +67,7 @@ foreach my $h (@ARGV){
       $check{$n} = 1;
       $phenolyzer_input .= "$n;";
       ++$counter;
-      my $term = hpo::hpo_to_term($n);
+      my $term = hpo_to_name($n);
       print "\t$n\t$term\n";
    }
    print "$counter HPO terms\n\n";
