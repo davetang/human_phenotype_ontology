@@ -3,7 +3,7 @@
 require Exporter;
 package hpo;
 @ISA = qw(Exporter);
-@EXPORT_OK = qw/hpo_to_name hpo_to_synonym hpo_to_level/;
+@EXPORT_OK = qw/hpo_to_name hpo_to_synonym hpo_to_level hpo_to_disease/;
 
 # download from http://purl.obolibrary.org/obo/hp.obo
 my $script_path = $0;
@@ -56,6 +56,33 @@ while(<IN>){
    }
 }
 close(IN);
+
+my $disease = $script_path . 'phenotype_annotation.tab.gz';
+
+my %disease_lookup = ();
+open(IN,'-|',"gunzip -c $disease") || die "Could not open $disease: $!\n";
+while(<IN>){
+   chomp;
+   my ($db, $db_object_id, $db_name, $qualifier, $hpo, $reference, $evidence, $modifier, $frequency, $with, $aspect, $synonym, $date, $assigned) = split(/\t/);
+   if (exists $disease_lookup{$hpo}){
+      my $index = scalar(@{$disease_lookup{$hpo}});
+      $disease_lookup{$hpo}[$index] = $db_name;
+   } else {
+      $disease_lookup{$hpo}[0] = $db_name;
+   }
+}
+close(IN);
+
+# return number of disease/s associated with HPO ID
+sub hpo_to_disease {
+   my ($hpo) = @_;
+   if (exists $disease_lookup{$hpo}){
+      my $n = scalar(@{$disease_lookup{$hpo}});
+      return($n);
+   } else {
+      return("No diseases associated with $hpo\n");
+   }
+}
 
 # return the full name of a HPO ID
 sub hpo_to_name {

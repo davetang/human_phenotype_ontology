@@ -52,15 +52,14 @@ close(IN);
 foreach my $h (@ARGV){
    next unless exists $lookup{$h};
    my %check = ();
-   my $counter = 0;
+   my $number = scalar(@{$lookup{$h}});
    print "$h\n";
    foreach my $n (@{$lookup{$h}}){
       next if exists $check{$n};
       $check{$n} = 1;
-      ++$counter;
       print "\t$n\n";
    }
-   print "$h\t$counter\n";
+   print "$h\t$number\n";
 }
 
 __END__
