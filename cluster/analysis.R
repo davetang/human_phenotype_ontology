@@ -40,6 +40,16 @@ jaccard_index(a, c)
 jaccard_index(b, c)
 jaccard_index(c, d)
 
+# compare one to all
+interest <- 305400
+all_omim <- omim %>% select(DB_Object_ID) %>% unique()
+all_omim <- all_omim$DB_Object_ID
+all_omim <- all_omim[!grepl(interest, all_omim)]
+all_omim_name <- sapply(X = all_omim, FUN = omim_name)
+one_to_all <- sapply(X = all_omim, function(x) jaccard_index(omim_to_hpo(x), omim_to_hpo(interest)))
+one_to_all_df <- data.frame(omim = all_omim, jaccard = one_to_all, title = unlist(all_omim_name))
+one_to_all_df %>% arrange(desc(jaccard)) %>% head(n = 10)
+
 # data frame with OMIM ID and number of HPO terms
 wanted <- omim %>% select(DB_Object_ID) %>% group_by(DB_Object_ID) %>% summarise(n = n()) %>% filter(n > 30, n < 61)
 
