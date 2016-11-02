@@ -1,4 +1,4 @@
-#!/usr/bin/env Rscript --vanilla
+#!/usr/bin/env Rscript
 #
 # Usage: omim_to_closest.R <OMIM ID>
 #
