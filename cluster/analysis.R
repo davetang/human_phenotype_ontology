@@ -1,103 +1,224 @@
+---
+title: "Clustering OMIM disorders"
+output: html_notebook
+---
+
+The Human Phenotype Ontology (HPO) team have created a standardised vocabulary of phenotypic abnormalities and associated them to OMIM disorders. These associations are in the file `phenotype_annotation.tab`, which I have saved in this repository.
+
+```{r}
+pa <- read.table('../script/phenotype_annotation.tab.gz', header = FALSE, stringsAsFactors = FALSE, quote='', sep="\t", comment='')
+names(pa) <- c('DB', 'DB_Object_ID', 'DB_Name', 'Qualifier', 'HPO', 'DB_Reference', 'Evidence_code', 'Onset_modifier', 'Frequency_modifier', 'With', 'Aspect', 'Synonym', 'Date', 'Assigned_by')
+head(pa)
+```
+
+HPO terms are also associated to Orphanet and DECIPHER disorders but I will be using only OMIM disorders for now.
+
+```{r}
+unique(pa$DB)
+```
+
+I'll use the `dplyr` package to make it easier to work with data frames. I'll use the `filter()` function to create an OMIM data frame.
+
+```{r}
+library(dplyr)
+omim <- filter(pa, DB == 'OMIM')
+omim <- tbl_df(omim)
+head(omim)
+```
+
+On average, how many HPO terms are associated with OMIM disorders?
+
+```{r}
+omim %>%
+  select(DB_Object_ID) %>%
+  group_by(DB_Object_ID) %>%
+  summarise(n = n()) %>%
+  summarise(total = n(), mean = mean(n), median = median(n))
+```
+
+Create a function that retrieves the associated HPO terms for an OMIM ID.
+
+```{r}
+omim_to_hpo <- function(x){
+  r <- omim %>% filter(DB_Object_ID == x) %>% select(HPO)
+  return(r$HPO)
+}
+omim_to_hpo(100050)
+```
+
+Now we're getting to the main aim of this work: I want to find out how similar a pair of OMIM disorders are based on their associated HPO terms. I will use the Jaccard index to measure similarity.
+
+```{r}
 jaccard_index <- function(x, y){
   i <- length(intersect(x, y))
   d <- i/length(union(x,y))
   return(d)
 }
+```
 
-setwd('~/github/human_phenotype_ontology/cluster/')
-pa <- read.table('../script/phenotype_annotation.tab.gz', header = FALSE, stringsAsFactors = FALSE, quote='', sep="\t", comment='')
-names(pa) <- c('DB', 'DB_Object_ID', 'DB_Name', 'Qualifier', 'HPO', 'DB_Reference', 'Evidence_code', 'Onset_modifier', 'Frequency_modifier', 'With', 'Aspect', 'Synonym', 'Date', 'Assigned_by')
+Four disorders I'm interested in are KBG syndrome (148050), Aarskog-Scott syndrome (305400), Kleefstra syndrome (610253), and Filippi syndrome (272440).
 
-library(dplyr)
-omim <- filter(pa, DB == 'OMIM')
-omim <- tbl_df(omim)
+```{r}
+kbgs      <- omim_to_hpo(148050)
+ass       <- omim_to_hpo(305400)
+kleefstra <- omim_to_hpo(610253)
+filippi   <- omim_to_hpo(272440)
 
-# cross-checking the stats
-omim %>%
-  select(DB_Object_ID) %>%
-  group_by(DB_Object_ID) %>%
-  summarise(n = n()) %>%
-  summarise(mean = mean(n))
+kbgs
+```
 
-omim %>% select(DB_Object_ID) %>% group_by(DB_Object_ID) %>% summarise(n = n()) %>% filter(n > 30, n < 61)
+Calculate the Jaccard indexes between the four disorders.
 
-omim_to_hpo <- function(x){
-  r <- omim %>% filter(DB_Object_ID == x) %>% select(HPO)
-  return(r$HPO)
+```{r}
+jaccard_index(kbgs, ass)
+jaccard_index(kbgs, kleefstra)
+jaccard_index(kbgs, filippi)
+jaccard_index(ass, kleefstra)
+jaccard_index(ass, filippi)
+jaccard_index(kleefstra, filippi)
+```
+
+The Jaccard index between KBG syndrome and Aarskog-Scott syndrome was the highest between all the pairwise comparisons. Let's compare KBG syndrome to all the other 6,946 OMIM disorders, to see where Aarskog-Scott syndrome ranks.
+
+```{r}
+my_omim <- 148050
+all_omim_id <- omim %>% select(DB_Object_ID) %>% unique()
+all_omim_id <- all_omim_id$DB_Object_ID
+all_omim_id <- all_omim_id[!grepl(my_omim, all_omim_id)]
+length(all_omim_id)
+one_to_all <- sapply(X = all_omim_id, function(x) jaccard_index(omim_to_hpo(x), omim_to_hpo(my_omim)))
+head(one_to_all)
+```
+
+We have the scores but we don't know which OMIM disorders they correspond to. Let's fix that by creating a function to obtain the names of an OMIM disorder.
+
+```{r rows.print=20}
+get_omim_name <- function(x){
+  my_name <- pa %>% filter(DB == 'OMIM', DB_Object_ID == x) %>% select(DB_Name) %>% summarise(name = unique(DB_Name))
+  my_name <- strsplit(x = unlist(my_name), split = ";")[[1]][1]
+  return(my_name)
 }
 
-# 148050 KBG SYNDROME
-a <- omim_to_hpo(148050)
-# 305400 AARSKOG-SCOTT SYNDROME
-b <- omim_to_hpo(305400)
-# 610253 KLEEFSTRA SYNDROME
-c <- omim_to_hpo(610253)
-# 272440 FILIPPI SYNDROME
-d <- omim_to_hpo(272440)
+all_omim_name <- sapply(X = all_omim_id, FUN = get_omim_name)
+one_to_all_df <- data.frame(omim = all_omim_id, jaccard = one_to_all, name = unlist(all_omim_name))
+one_to_all_df %>% arrange(desc(jaccard)) %>% select(name, jaccard) %>% head(n = 20)
+```
 
-jaccard_index(a, b)
-jaccard_index(a, c)
-jaccard_index(b, c)
-jaccard_index(c, d)
+How many pairwise comparisons would there be if I wanted to pre-calculate all the Jaccard indexes?
 
-# compare one to all
-interest <- 305400
-all_omim <- omim %>% select(DB_Object_ID) %>% unique()
-all_omim <- all_omim$DB_Object_ID
-all_omim <- all_omim[!grepl(interest, all_omim)]
-all_omim_name <- sapply(X = all_omim, FUN = omim_name)
-one_to_all <- sapply(X = all_omim, function(x) jaccard_index(omim_to_hpo(x), omim_to_hpo(interest)))
-one_to_all_df <- data.frame(omim = all_omim, jaccard = one_to_all, title = unlist(all_omim_name))
-one_to_all_df %>% arrange(desc(jaccard)) %>% head(n = 10)
+```{r}
+choose(length(unique(omim$DB_Object_ID)), 2)
+```
 
-# data frame with OMIM ID and number of HPO terms
-wanted <- omim %>% select(DB_Object_ID) %>% group_by(DB_Object_ID) %>% summarise(n = n()) %>% filter(n > 30, n < 61)
+Let's test it on a smaller data set first instead of computing 24 million Jaccard indexes.
 
-# vector of OMIM IDs
-wanted_omim <- wanted$DB_Object_ID
+```{r}
+test_set <- omim %>% select(DB_Object_ID) %>% group_by(DB_Object_ID) %>% summarise(n = n()) %>% filter(n > 30, n < 61)
+choose(nrow(test_set), 2)
+```
 
-# list of OMIM IDs and HPO terms
-wanted_omim_hpo <- sapply(X = wanted_omim, FUN = omim_to_hpo)
-names(wanted_omim_hpo) <- wanted_omim
+```{r}
+test_omim_id <- test_set$DB_Object_ID
+test_omim_hpo <- sapply(X = test_omim_id, FUN = omim_to_hpo)
+names(test_omim_hpo) <- test_omim_id
+head(test_omim_hpo, 2)
+```
 
-# calculate all jaccard indexes
-indexes <- apply(combn(1:length(wanted_omim), 2), 2, function(x) jaccard_index(wanted_omim_hpo[[x[1]]], wanted_omim_hpo[[x[2]]]))
-choose(length(wanted_omim), 2)
+Now to calculate all the pairwise Jaccard indexes. We'll use the `combn()` function to create a matrix of values containing all pairwise combinations.
 
-summary(indexes)
-table(indexes > 0.16)
+```{r}
+my_jaccard_indexes <- apply(combn(1:length(test_omim_id), 2), 2, function(x) jaccard_index(test_omim_hpo[[x[1]]], test_omim_hpo[[x[2]]]))
+length(my_jaccard_indexes)
+head(my_jaccard_indexes)
+summary(my_jaccard_indexes)
+table(my_jaccard_indexes > jaccard_index(kbgs, ass))
+```
 
-# create empty matrix
-mat <- diag(length(wanted_omim))
+Let's store the Jaccard indexes in a matrix instead.
 
-# fill lower triangle with Jaccard indexes
-mat[lower.tri(mat)] <- indexes
-row.names(mat) <- wanted_omim
-colnames(mat) <- wanted_omim
+```{r}
+my_jaccard_matrix <- diag(length(test_omim_id))
+my_jaccard_matrix[lower.tri(my_jaccard_matrix)] <- my_jaccard_indexes
+row.names(my_jaccard_matrix) <- test_omim_id
+colnames(my_jaccard_matrix) <- test_omim_id
 
-# sanity check
-mat[1:7, 1:7]
-x <- wanted_omim_hpo$`148050`
-y <- wanted_omim_hpo$`305400`
+my_jaccard_matrix[1:6, 1:6]
+```
+
+Let's perform some sanity checks.
+
+```{r}
+x <- test_omim_hpo$`148050`
+y <- test_omim_hpo$`305400`
 jaccard_index(x, y)
+jaccard_index(kbgs, ass)
 
-# another sanity check
-grep(pattern = 148050, x = wanted_omim)
-grep(pattern = 305400, x = wanted_omim)
-mat[489, 75]
+my_jaccard_matrix[grep(pattern = 305400, x = test_omim_id), grep(pattern = 148050, x = test_omim_id)]
+```
 
-# convert into distance
-mat_dist <- as.dist(1 - mat)
-hc <- hclust(mat_dist, method = 'average')
-plot(hc)
+Now that we have a matrix of Jaccard indexes, we can convert this into a distance matrix and perform hierarchical clustering.
 
-omim_name <- function(x){
-  n <- pa %>% filter(DB == 'OMIM', DB_Object_ID == x) %>% select(DB_Name) %>% summarise(name = unique(DB_Name))
-  return(n)
-}
+```{r, fig.width = 10}
+my_jaccard_distance <- as.dist(1 - my_jaccard_matrix)
+hc <- hclust(my_jaccard_distance, method = 'complete')
+plot(hc, labels = FALSE)
+```
 
-clusters <- cutree(hc, h = 0.80)
-table(clusters)[table(clusters)>1]
-my_cluster <- wanted_omim[clusters == 248]
-sapply(X = my_cluster, FUN = omim_name)
+Define some clusters by cutting the tree.
+
+```{r}
+table(my_jaccard_distance < 0.80)
+my_cluster <- cutree(hc, h = 0.80)
+table(my_cluster)[table(my_cluster)>1]
+```
+
+Cluster 76 has five OMIM disorders; what are they?
+
+```{r}
+cluster_76 <- test_omim_id[my_cluster == 76]
+lapply(X = cluster_76, FUN = get_omim_name)
+```
+
+Let's cut the tree at 0.90 instead.
+
+```{r}
+table(my_jaccard_distance < 0.9)
+my_cluster_h90 <- cutree(hc, h = 0.9)
+table(my_cluster_h90)[table(my_cluster_h90)>1]
+```
+
+Check out cluster 60.
+
+```{r}
+cluster_60 <- test_omim_id[my_cluster_h90 == 60]
+lapply(X = cluster_60, FUN = get_omim_name)
+```
+
+Notice that OMIM:177980 wasn't even in the top 20, when I compared KBG syndrome to all the other OMIM disorders?
+
+```{r rows.print=20}
+one_to_all_df %>% arrange(desc(jaccard)) %>% select(name, jaccard) %>% head(n = 20)
+```
+
+This is due to the way hierarchical clustering works. For example, OMIM:607721 is ranked two in the list above but isn't in the cluster when I cut the tree at 0.90. It is likely that OMIM:607721 matches other disorders better than it matches KBG syndrome, and is clustered with them.
+
+```{r}
+my_cluster_h90[grep(pattern = 607721, test_omim_id)]
+cluster_268 <- test_omim_id[my_cluster_h90 == 268]
+lapply(X = cluster_268, FUN = get_omim_name)
+```
+
+Calculate the pairwise Jaccard indexes.
+
+```{r}
+cdd <- omim_to_hpo(601853)
+cs  <- omim_to_hpo(605627)
+lah <- omim_to_hpo(607721)
+
+jaccard_index(lah, cs)
+jaccard_index(lah, cdd)
+jaccard_index(cdd, cs)
+```
+
+
 
