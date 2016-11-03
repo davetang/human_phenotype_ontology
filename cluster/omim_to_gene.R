@@ -3,6 +3,9 @@
 # Usage: omim_to_closest.R <OMIM API key> <OMIM ID>
 #
 
+suppressPackageStartupMessages(library(XML))
+suppressPackageStartupMessages(library(methods))
+
 if("romim" %in% rownames(installed.packages()) == FALSE){
   stop("Please install the romim package first by running: library(devtools); install_github('davetang/romim')")
 }

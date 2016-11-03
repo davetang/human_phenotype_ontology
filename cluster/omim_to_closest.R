@@ -51,5 +51,5 @@ all_omim_id <- all_omim_id[!grepl(my_omim, all_omim_id)]
 one_to_all <- sapply(X = all_omim_id, function(x) jaccard_index(omim_to_hpo(x), omim_to_hpo(my_omim)))
 all_omim_name <- sapply(X = all_omim_id, FUN = get_omim_name)
 one_to_all_df <- data.frame(omim = all_omim_id, jaccard = one_to_all, name = unlist(all_omim_name))
-one_to_all_df %>% arrange(desc(jaccard)) %>% select(name, jaccard) %>% head(n = 20)
+one_to_all_df %>% arrange(desc(jaccard)) %>% select(omim, jaccard, name) %>% head(n = 20)
 

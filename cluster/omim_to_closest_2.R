@@ -34,5 +34,5 @@ lookup    <- omim %>% distinct(DB_Object_ID, DB_Name)
 my_name   <- sapply(lookup$DB_Name, function(x) strsplit(x, split = ";")[[1]][1])
 
 my_df <- data.frame(omim = my_id, jaccard = my_result, name = my_name)
-my_df %>% arrange(desc(jaccard)) %>% select(name, jaccard) %>% head(n = 20)
+my_df %>% arrange(desc(jaccard)) %>% select(omim, jaccard, name) %>% head(n = 20)
 
