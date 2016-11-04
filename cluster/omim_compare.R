@@ -55,8 +55,8 @@ make_term_matrix <- function(name1, name2, x, y){
   first <- setdiff(x, y)
   second <- setdiff(y, x)
   
-  column_1 <- c(rep(1, length(first)), rep(5, length(both)), rep(0, length(second)))
-  column_2 <- c(rep(0, length(first)), rep(5, length(both)), rep(1, length(second)))
+  column_1 <- c(rep(1, length(first)), rep(2, length(both)), rep(0, length(second)))
+  column_2 <- c(rep(0, length(first)), rep(2, length(both)), rep(1, length(second)))
   
   my_matrix <- matrix(c(column_1, column_2), nrow=length(column_1))
   row.names(my_matrix) <- c(first, both, second)
@@ -73,10 +73,11 @@ my_second_hpo <- omim_to_hpo(my_second_omim)
 my_matrix <- make_term_matrix(my_first_omim, my_second_omim, my_first_hpo, my_second_hpo)
 
 my_pdf <- paste(my_first_omim, '_', my_second_omim, '.pdf', sep='')
-pdf(file = my_pdf)
+pdf(file = my_pdf, width = 10, height = 10)
 comparison.cloud(my_matrix, colors = NA, scale = c(1, 3), rot.per = 0)
 dev.off()
 
 both <- intersect(my_first_hpo, my_second_hpo)
 my_txt <- paste(my_first_omim, '_', my_second_omim, '.txt', sep='')
 write(both, my_txt)
+

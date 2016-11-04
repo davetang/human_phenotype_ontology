@@ -14,6 +14,7 @@ if (length(args) != 1){
 
 my_omim <- as.character(args[1])
 
+suppressPackageStartupMessages(library(dplyr))
 library(dplyr)
 
 pa <- read.table('../script/phenotype_annotation.tab.gz', header = FALSE, stringsAsFactors = FALSE, quote='', sep="\t", comment='')

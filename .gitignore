@@ -1,3 +1,5 @@
 exomiser-cli-7.2.1*
 *.swp
 *.Rhistory
+cluster/*.pdf
+cluster/*.txt

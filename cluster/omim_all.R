@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
 
+suppressPackageStartupMessages(library(dplyr))
 library(dplyr)
 
 pa <- read.table('../script/phenotype_annotation.tab.gz', header = FALSE, stringsAsFactors = FALSE, quote='', sep="\t", comment='')
