@@ -219,3 +219,59 @@ NULL
 [1] "TBCE, KCS, KCS1, HRD"
 ~~~~
 
+# Compare HPO terms of two OMIM disorders
+
+Use the script `omim_compare.R`, which generates an image and a text file of the overlapping HPO terms between two OMIM disorders.
+
+~~~~{.bash}
+omim_compare.R 272440 615236
+~~~~
+
+![Overlap of HPO terms between two OMIM disorders](image/272440_615236.png)
+
+Use the script `hpo_to_term.pl` to obtain the names, ontology depth, and disease associations of the overlapping HPO terms.
+
+~~~~{.bash}
+for hp in `cat 272440_615236.txt`;
+do ../script/hpo_to_term.pl $hp; done |
+grep -A1 "^HP"
+HP:0000233      level: 7        disease associations: 131
+        thin vermilion border
+--
+HP:0000252      level: 9        disease associations: 959
+        microcephaly
+--
+HP:0000322      level: 9        disease associations: 144
+        short philtrum
+--
+HP:0000337      level: 6        disease associations: 127
+        broad forehead
+--
+HP:0000430      level: 8        disease associations: 98
+        underdeveloped nasal alae
+--
+HP:0000648      level: 9        disease associations: 382
+        optic atrophy
+--
+HP:0000954      level: 9        disease associations: 165
+        single transverse palmar crease
+--
+HP:0001249      level: 5        disease associations: 971
+        intellectual disability
+--
+HP:0001250      level: 4        disease associations: 1295
+        seizures
+--
+HP:0001629      level: 7        disease associations: 304
+        ventricular septal defect
+--
+HP:0004322      level: 4        disease associations: 1351
+        short stature
+--
+HP:0006101      level: 8        disease associations: 196
+        finger syndactyly
+--
+HP:0100543      level: 5        disease associations: 1040
+        cognitive impairment
+~~~~
+
