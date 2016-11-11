@@ -80,4 +80,6 @@ dev.off()
 both <- intersect(my_first_hpo, my_second_hpo)
 my_txt <- paste(my_first_omim, '_', my_second_omim, '.txt', sep='')
 write(both, my_txt)
+write(my_first_hpo, paste(my_first_omim, '.txt', sep=''))
+write(my_second_hpo, paste(my_second_omim, '.txt', sep=''))
 
