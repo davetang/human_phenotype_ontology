@@ -97,5 +97,32 @@ co.pl HP:0000648 HP:0000668
 R --quiet -e 'choose(11785, 2)'
 > choose(11785, 2)
 [1] 69437220
+
+time co_all.pl > cooccurrence.tsv
+
+real    732m35.246s
+user    731m49.280s
+sys     0m0.404s
+
+gzip cooccurrence.tsv
+
+# around 12 hours
+bc -l<<<732/60
+12.20000000000000000000
+~~~~
+
+# Co-occurrence take two
+
+Using `cooccurrence.tsv.gz`.
+
+~~~~{.bash}
+co_2.pl HP:0000648 HP:0000668
+HP:0000648      HP:0000668      101800
+HP:0000648      HP:0000668      194190
+HP:0000648      HP:0000668      272440
+HP:0000648      HP:0000668      303600
+HP:0000648      HP:0000668      305600
+HP:0000648      HP:0000668      308300
+HP:0000648      HP:0000668      607694
 ~~~~
 
