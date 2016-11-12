@@ -126,3 +126,190 @@ HP:0000648      HP:0000668      308300
 HP:0000648      HP:0000668      607694
 ~~~~
 
+# Using the ontologyIndex
+
+~~~~{.r}
+install.packages('ontologyIndex')
+library(ontologyIndex)
+
+hpo <- get_ontology(file = "../script/hp.obo.gz")
+class(hpo)
+[1] "ontology_index"
+
+check(hpo)
+[1] TRUE
+
+names(hpo)
+[1] "id"        "name"      "parents"   "children"  "ancestors" "obsolete"
+
+length(hpo$id)
+[1] 11785
+
+head(hpo$id)
+  HP:0000001   HP:0000002   HP:0000003   HP:0000005   HP:0000006   HP:0000007 
+"HP:0000001" "HP:0000002" "HP:0000003" "HP:0000005" "HP:0000006" "HP:0000007"
+
+head(hpo$name)
+                       HP:0000001                        HP:0000002 
+                            "All"      "Abnormality of body height" 
+                       HP:0000003                        HP:0000005 
+   "Multicystic kidney dysplasia"             "Mode of inheritance" 
+                       HP:0000006                        HP:0000007 
+ "Autosomal dominant inheritance" "Autosomal recessive inheritance"
+
+hpo$name['HP:0000648']
+     HP:0000648 
+"Optic atrophy"
+
+head(hpo$parents)
+$`HP:0000001`
+character(0)
+
+$`HP:0000002`
+[1] "HP:0001507"
+
+$`HP:0000003`
+[1] "HP:0000107"
+
+$`HP:0000005`
+[1] "HP:0000001"
+
+$`HP:0000006`
+[1] "HP:0000005"
+
+$`HP:0000007`
+[1] "HP:0000005"
+
+hpo$parents$`HP:0000648`
+[1] "HP:0012795"
+~~~~
+
+Several useful functions in the ontologyIndex package. Get the descendants of a term.
+
+~~~~{.r}
+get_descendants(hpo, 'HP:0000648')
+[1] "HP:0000648" "HP:0007958"
+
+hpo$name[hpo$children$`HP:0000648`]
+                                    HP:0007958 
+"Optic atrophy from cranial nerve compression"
+~~~~
+
+Using my script.
+
+~~~~{.bash}
+../script/hpo_to_tree.pl HP:0000648
+HP:0000648      optic atrophy
+HP:0012795      abnormality of the optic disc
+HP:0000587      abnormality of the optic nerve
+HP:0001098      abnormality of the fundus
+HP:0004329      abnormality of the posterior segment of the globe
+HP:0012374      abnormality of the globe
+HP:0012372      abnormal eye morphology
+HP:0000478      abnormality of the eye
+HP:0000118      phenotypic abnormality
+HP:0000001      all
+Level 9
+
+../script/hpo_to_tree.pl HP:0007958
+HP:0007958      optic atrophy from cranial nerve compression
+HP:0000648      optic atrophy
+HP:0012795      abnormality of the optic disc
+HP:0000587      abnormality of the optic nerve
+HP:0001098      abnormality of the fundus
+HP:0004329      abnormality of the posterior segment of the globe
+HP:0012374      abnormality of the globe
+HP:0012372      abnormal eye morphology
+HP:0000478      abnormality of the eye
+HP:0000118      phenotypic abnormality
+HP:0000001      all
+Level 10
+~~~~
+
+An ontology term has all the properties of its parents. The `minimal_set()` function will return the deepest level.
+
+~~~~{.r}
+minimal_set(hpo, c('HP:0000648', 'HP:0007958'))
+[1] "HP:0007958"
+
+get_ancestors(hpo, 'HP:0000648')
+ [1] "HP:0000001" "HP:0000118" "HP:0000478" "HP:0012372" "HP:0012374" "HP:0004329"
+ [7] "HP:0001098" "HP:0000587" "HP:0012795" "HP:0000648"
+
+hpo$ancestors$`HP:0000648` == get_ancestors(hpo, 'HP:0000648')
+ [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+~~~~
+
+The get_term_descendancy_matrix() creates the logical descendancy matrix for set of terms. If the term on a row, is an ancestor to the term on a column, the value is TRUE.
+
+~~~~{.r}
+get_term_descendancy_matrix(hpo, c("HP:0001098", "HP:0000587", "HP:0012795", "HP:0000648"))
+           HP:0001098 HP:0000587 HP:0012795 HP:0000648
+HP:0001098      FALSE       TRUE       TRUE       TRUE
+HP:0000587      FALSE      FALSE       TRUE       TRUE
+HP:0012795      FALSE      FALSE      FALSE       TRUE
+HP:0000648      FALSE      FALSE      FALSE      FALSE
+~~~~
+
+The `get_term_frequencies()` function, calculates the frequency of a HPO term, including its parents. If more than a term is given to the function, the frequency is normalised by the total number of input terms.
+
+~~~~{.r}
+get_term_frequencies(hpo, 'HP:0000648')
+HP:0000001 HP:0000118 HP:0000478 HP:0000587 HP:0000648 HP:0001098 HP:0004329 HP:0012372 
+         1          1          1          1          1          1          1          1 
+HP:0012374 HP:0012795 
+         1          1
+
+get_term_frequencies(hpo, 'HP:0007958')
+HP:0000001 HP:0000118 HP:0000478 HP:0000587 HP:0000648 HP:0000707 HP:0000759 HP:0001098 
+         1          1          1          1          1          1          1          1 
+HP:0001291 HP:0001293 HP:0004329 HP:0007958 HP:0012372 HP:0012374 HP:0012639 HP:0012795 
+         1          1          1          1          1          1          1          1
+
+get_term_frequencies(hpo, c('HP:0000648', 'HP:0007958'))
+HP:0000001 HP:0000118 HP:0000478 HP:0000587 HP:0000648 HP:0000707 HP:0000759 HP:0001098 
+       1.0        1.0        1.0        1.0        1.0        0.5        0.5        1.0 
+HP:0001291 HP:0001293 HP:0004329 HP:0007958 HP:0012372 HP:0012374 HP:0012639 HP:0012795 
+       0.5        0.5        1.0        0.5        1.0        1.0        0.5        1.0
+
+# all terms
+my_freq <- get_term_frequencies(hpo, hpo$id)
+length(my_freq)
+[1] 11785
+
+summary(my_freq)
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+0.0000848 0.0000848 0.0000848 0.0009788 0.0002546 0.9905000
+
+head(my_freq[order(my_freq, decreasing = TRUE)])
+HP:0000001 HP:0000118 HP:0000924 HP:0011842 HP:0040064 HP:0040068 
+ 0.9904964  0.9828596  0.2991090  0.2777259  0.2286805  0.1916843
+
+hpo$name[head(names(my_freq[order(my_freq, decreasing = TRUE)]))]
+                          HP:0000001                           HP:0000118 
+                               "All"             "Phenotypic abnormality" 
+                          HP:0000924                           HP:0011842 
+"Abnormality of the skeletal system" "Abnormality of skeletal morphology" 
+                          HP:0040064                           HP:0040068 
+              "Abnormality of limbs"           "Abnormality of limb bone"
+~~~~
+
+The `get_term_info_content()` function calculates the information content of each term in a set of phenotypes. Less frequent terms have a higher information content.
+
+~~~~{.r}
+get_term_info_content(hpo, c('HP:0000648', 'HP:0007958'))
+HP:0000001 HP:0000118 HP:0000478 HP:0000587 HP:0000648 HP:0000707 HP:0000759 HP:0001098 
+ 0.0000000  0.0000000  0.0000000  0.0000000  0.0000000  0.6931472  0.6931472  0.0000000 
+HP:0001291 HP:0001293 HP:0004329 HP:0007958 HP:0012372 HP:0012374 HP:0012639 HP:0012795 
+ 0.6931472  0.6931472  0.0000000  0.6931472  0.0000000  0.0000000  0.6931472  0.0000000
+
+my_ic <- get_term_info_content(hpo, hpo$id)
+head(my_ic)
+ HP:0000001  HP:0000002  HP:0000003  HP:0000005  HP:0000006  HP:0000007 
+0.009549054 5.819234754 9.374582815 6.078745949 7.428672666 9.374582815
+
+get_term_property(hpo, property_name = 'ancestors', term = 'HP:0000648')
+ [1] "HP:0000001" "HP:0000118" "HP:0000478" "HP:0012372" "HP:0012374" "HP:0004329"
+ [7] "HP:0001098" "HP:0000587" "HP:0012795" "HP:0000648"
+~~~~
+
