@@ -5,7 +5,7 @@ Some of the scripts require the subroutines, i.e. functions, in the `hpo.pm` pac
 
 ~~~~{.bash}
 # you can also put this in your .bashrc file
-export PERL5LIB=/home/me/github/human_phenotype_ontology/script
+export PERL5LIB=~/github/human_phenotype_ontology/script
 ~~~~
 
 # Files to download

@@ -126,6 +126,119 @@ HP:0000648      HP:0000668      308300
 HP:0000648      HP:0000668      607694
 ~~~~
 
+Most co-occurred terms.
+
+~~~~{.bash}
+gunzip -c cooccurrence.tsv.gz | wc -l
+1516932
+
+time gunzip -c cooccurrence.tsv.gz | sort -k1 -k2 | cut -f1,2 | uniq -c | sort -k1rn | head
+    473 HP:0000007      HP:0001249
+    468 HP:0000007      HP:0001250
+    415 HP:0000007      HP:0004322
+    395 HP:0000007      HP:0001252
+    387 HP:0000007      HP:0001263
+    369 HP:0001249      HP:0001250
+    365 HP:0001250      HP:0001263
+    358 HP:0000007      HP:0000252
+    337 HP:0001250      HP:0001252
+    319 HP:0001249      HP:0100543
+
+real    0m36.480s
+user    0m37.911s
+sys     0m0.365s
+
+gunzip -c cooccurrence.tsv.gz | sort -k1 -k2 | cut -f1,2 | uniq -c | sort -k1rn | gzip > cooccurrence.freq.gz
+
+gunzip -c cooccurrence.freq.gz | wc -l
+653304
+~~~~
+
+What are HP:0000007, HP:0000252, HP:0001249, HP:0001250, HP:0001252, HP:0001263, HP:0004322, and HP:0100543?
+
+~~~~{.bash}
+../script/hpo_to_term.pl HP:0000007 HP:0000252 HP:0001249 HP:0001250 HP:0001252 HP:0001263 HP:0004322 HP:0100543
+HP:0000007      level: 2        disease associations: 2771
+        autosomal recessive inheritance
+        autosomal recessive
+        autosomal recessive form
+        autosomal recessive predisposition
+HP:0000252      level: 9        disease associations: 959
+        microcephaly
+        abnormally small cranium
+        abnormally small head
+        abnormally small skull
+        decreased circumference of cranium
+        decreased size of cranium
+        decreased size of head
+        decreased size of skull
+        reduced head circumference
+        small calvarium
+        small cranium
+        small head
+        small head circumference
+        small skull
+HP:0001249      level: 5        disease associations: 971
+        intellectual disability
+        dull intelligence
+        low intelligence
+        mental deficiency
+        mental retardation
+        mental retardation, nonspecific
+        mental-retardation
+        nonprogressive intellectual disability
+        nonprogressive mental retardation
+        poor school performance
+HP:0001250      level: 4        disease associations: 1295
+        seizures
+        epilepsy
+        seizure
+HP:0001252      level: 5        disease associations: 1014
+        muscular hypotonia
+        hypotonia
+        muscle hypotonia
+HP:0001263      level: 6        disease associations: 734
+        global developmental delay
+        cognitive delay
+        delayed cognitive development
+        delayed development
+        delayed developmental milestones
+        delayed intellectual development
+        delayed milestones
+        delayed psychomotor development
+        developmental delay
+        developmental delay in early childhood
+        developmental delay, global
+        developmental retardation
+        lack of psychomotor development
+        mental and motor retardation
+        motor and developmental delay
+        psychomotor delay
+        psychomotor development deficiency
+        psychomotor development failure
+        psychomotor developmental delay
+        psychomotor retardation
+        retarded development
+        retarded mental development
+        retarded psychomotor development
+HP:0004322      level: 4        disease associations: 1351
+        short stature
+        decreased body height
+        height less than 3rd percentile
+        short stature (below 3rd percentile)
+        small stature
+HP:0100543      level: 5        disease associations: 1040
+        cognitive impairment
+        abnormality of cognition
+        cognitive abnormality
+        cognitive defects
+        cognitive deficits
+        intellectual impairment
+        mental impairment
+~~~~
+
+A lot of the OMIM disorders are autosomal recessive and cause microcephaly, intellectual disability, seizures, muscular hypotonia, global developmental delay, short stature, and cognitive impairment.
+
 # Using the ontologyIndex
 
 ~~~~{.r}
