@@ -426,3 +426,116 @@ get_term_property(hpo, property_name = 'ancestors', term = 'HP:0000648')
  [7] "HP:0001098" "HP:0000587" "HP:0012795" "HP:0000648"
 ~~~~
 
+# Disease HPO frequency
+
+HPO frequency and information content of HPO terms associated with OMIM diseases.
+
+~~~~{.bash}
+gunzip -c  ../script/phenotype_annotation.tab.gz | grep "^OMIM" | cut -f5 | gzip > disease_hpo.txt.gz
+~~~~
+
+Using the ontologyIndex package.
+
+~~~~{.r}
+library(ontologyIndex)
+
+dis <- read.table('disease_hpo.txt.gz', header = FALSE, stringsAsFactors = FALSE)
+dis <- dis$V1
+
+freq <- get_term_frequencies(hpo, dis)
+ic <- get_term_info_content(hpo, dis)
+
+information_content <- data.frame(id = names(ic), info = ic, row.names = NULL)
+
+library(dplyr)
+
+information_content %>% filter(info > 10) %>% select(info) %>% table()
+ 10.164321800972 10.4520038734237 10.8574689815319 11.5506161620919 
+             444              579             1030             2097
+~~~~
+
+Check out some of the HPO terms with a high information content; score of 11.55062 seem to be associated with only 1 disease.
+
+~~~~{.bash}
+# HP:0003332 11.55062
+../script/hpo_to_term.pl HP:0003332
+HP:0003332      level: 8        disease associations: 1
+        absent primary metaphyseal spongiosa
+
+# HP:0003329 10.85747
+../script/hpo_to_term.pl HP:0003329
+HP:0003329      level: 6        disease associations: 2
+        hair shafts flattened at irregular intervals and twisted through 180 degrees about their axes
+
+# HP:0003333 10.45200
+../script/hpo_to_term.pl HP:0003333
+HP:0003333      level: 8        disease associations: 3
+        increased serum beta-hexosaminidase
+~~~~
+
+The number diseases each HPO term is associated with.
+
+~~~~{.bash}
+gunzip -c ../script/phenotype_annotation.tab.gz |
+grep "^OMIM" |
+cut -f2,5 |
+awk '{print $2,$1}' |
+sort -k1 |
+cut -f1 -d' '|
+uniq -c |
+sort -k1rn |
+head
+   2771 HP:0000007
+   2675 HP:0000006
+   1092 HP:0004322
+   1080 HP:0001250
+    936 HP:0001249
+    832 HP:0001252
+    802 HP:0000252
+    733 HP:0001263
+    682 HP:0100543
+    642 HP:0000347
+
+gunzip -c ../script/phenotype_annotation.tab.gz | grep "^OMIM" | cut -f2,5 | awk '{print $2,$1}' | sort -k1 | cut -f1 -d' '| uniq -c | sort -k1rn | awk '{print $1}' | stats
+Total lines:            6873
+Sum of lines:           103841
+Ari. Mean:              15.1085406663757
+Geo. Mean:              3.92226199165308
+Median:                 3
+Mode:                   1 (N=2204)
+Anti-Mode:              82 (N=1)
+Minimum:                1
+Maximum:                2771
+Variance:               4268.1293508894
+StdDev:                 65.330921858561
+~~~~
+
+How many HPO terms associated with diseases?
+
+~~~~{.bash}
+gunzip -c ../script/phenotype_annotation.tab.gz | grep "^OMIM" | cut -f2,5 | sort -k1 | awk '{print $1}' | uniq -c | head
+     42 100050
+      1 100070
+     42 100100
+      3 100200
+     37 100300
+      2 100600
+      2 100650
+      1 100675
+      6 100700
+     58 100800
+
+gunzip -c ../script/phenotype_annotation.tab.gz | grep "^OMIM" | cut -f2,5 | sort -k1 | awk '{print $1}' | uniq -c | awk '{print $1}' | stats
+Total lines:            6947
+Sum of lines:           103841
+Ari. Mean:              14.9476032819922
+Geo. Mean:              8.64515221919539
+Median:                 9
+Mode:                   2 (N=809)
+Anti-Mode:              83 (N=1)
+Minimum:                1
+Maximum:                249
+Variance:               313.762620929126
+StdDev:                 17.7133458423056
+~~~~
+
