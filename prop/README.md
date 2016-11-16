@@ -1,7 +1,9 @@
 Properties of HPO terms
 -----------------------
 
-# How many HPO terms?
+# HPO terms
+
+How many HPO terms?
 
 ~~~~{.bash}
 gunzip -c ../script/hp.obo.gz |
@@ -10,6 +12,18 @@ sed 's/id: //' |
 sort -u |
 wc -l
 11785
+~~~~
+
+How many are associated with OMIM disorders?
+
+~~~~{.bash}
+gunzip -c ../script/phenotype_annotation.tab.gz |
+grep "^OMIM" |
+cut -f5 |
+sort -u |
+wc -l
+    6873
+
 ~~~~
 
 # Co-occurrence
@@ -439,20 +453,53 @@ Using the ontologyIndex package.
 ~~~~{.r}
 library(ontologyIndex)
 
+hpo <- get_ontology(file = "../script/hp.obo.gz")
 dis <- read.table('disease_hpo.txt.gz', header = FALSE, stringsAsFactors = FALSE)
 dis <- dis$V1
+
+length(dis)
+[1] 103841
+
+length(unique(dis))
+[1] 6873
 
 freq <- get_term_frequencies(hpo, dis)
 ic <- get_term_info_content(hpo, dis)
 
-information_content <- data.frame(id = names(ic), info = ic, row.names = NULL)
+information_content <- data.frame(id = names(ic), info = ic, freq = freq, row.names = NULL)
+dim(information_content)
+[1] 8098    3
+
+length(unique(information_content$info))
+[1] 574
+length(unique(information_content$freq))
+[1] 574
+length(unique(information_content$id))
+[1] 8098
 
 library(dplyr)
+# freq is n / length(dis)
+information_content %>% arrange(freq) %>% head()
+          id     info         freq
+1 HP:0000753 11.55062 9.630108e-06
+2 HP:0001443 11.55062 9.630108e-06
+3 HP:0001459 11.55062 9.630108e-06
+4 HP:0001726 11.55062 9.630108e-06
+5 HP:0001862 11.55062 9.630108e-06
+6 HP:0001980 11.55062 9.630108e-06
 
 information_content %>% filter(info > 10) %>% select(info) %>% table()
  10.164321800972 10.4520038734237 10.8574689815319 11.5506161620919 
              444              579             1030             2097
+
+library(ggplot2)
+ggplot(data = information_content, aes(info)) +
+  geom_density() +
+  labs(title = 'Density plot of information content of HPO terms', x = 'Information content') +
+  theme(plot.title = element_text(size = 20, hjust = 0.5), axis.title = element_text(size = 16))
 ~~~~
+
+![Density plot of HPO terms](image/hpo_ic.png)
 
 Check out some of the HPO terms with a high information content; score of 11.55062 seem to be associated with only 1 disease.
 
@@ -471,6 +518,7 @@ HP:0003329      level: 6        disease associations: 2
 ../script/hpo_to_term.pl HP:0003333
 HP:0003333      level: 8        disease associations: 3
         increased serum beta-hexosaminidase
+
 ~~~~
 
 The number diseases each HPO term is associated with.
