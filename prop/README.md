@@ -466,7 +466,7 @@ length(unique(dis))
 freq <- get_term_frequencies(hpo, dis)
 ic <- get_term_info_content(hpo, dis)
 
-information_content <- data.frame(id = names(ic), info = ic, freq = freq, row.names = NULL)
+information_content <- data.frame(id = names(ic), info = ic, freq = freq, row.names = NULL, stringsAsFactors = FALSE)
 dim(information_content)
 [1] 8098    3
 
@@ -497,6 +497,8 @@ ggplot(data = information_content, aes(info)) +
   geom_density() +
   labs(title = 'Density plot of information content of HPO terms', x = 'Information content') +
   theme(plot.title = element_text(size = 20, hjust = 0.5), axis.title = element_text(size = 16))
+
+save(information_content, file = 'information_content.Robj')
 ~~~~
 
 ![Density plot of HPO terms](image/hpo_ic.png)
