@@ -49,6 +49,7 @@ while(<IN>){
    chomp;
    ++$total;
    my $term = lc($_);
+   $term = trim_whitespace($term);
    if (exists $lookup{$term}){
       ++$match;
       print "$term: $lookup{$term}\n";
@@ -117,6 +118,13 @@ foreach my $q (@missing){
 }
 
 exit(0);
+
+sub trim_whitespace {
+   my ($s) = @_;
+   $s =~ s/^\s+//;
+   $s =~ s/\s+$//;
+   return($s);
+}
 
 sub align {
    my ($seq1,$seq2) = @_;
