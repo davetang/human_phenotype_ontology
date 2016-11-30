@@ -78,7 +78,7 @@ if (-f '/SCRATCH/Tang/omim/omim_lookup.tsv'){
       $gene =~ s/"//g;
       my @gene = split(/,/, $gene);
       my $g = $gene[0];
-      $model =~ s/\s{.*$//;
+      $model =~ s/\s\{.*$//;
       $model =~ s/^"//;
       if (exists $id{$omim}){
          print STDERR join("\t", $omim, $g, $model, $name), "\n";
