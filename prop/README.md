@@ -440,6 +440,35 @@ get_term_property(hpo, property_name = 'ancestors', term = 'HP:0000648')
  [7] "HP:0001098" "HP:0000587" "HP:0012795" "HP:0000648"
 ~~~~
 
+# Plotting HPO relationships
+
+Use [ontologyPlot](https://cran.r-project.org/web/packages/ontologyPlot/vignettes/plotting-ontological-terms.html).
+
+~~~~{.r}
+library(ontologyPlot)
+library(ontologyIndex)
+
+setwd('~/github/human_phenotype_ontology/prop/')
+hpo <- get_ontology(file = "../script/hp.obo.gz")
+
+# HPO terms associated with OMIM:612922
+my_hpo <- c('HP:0000006', 'HP:0000007', 'HP:0000093', 'HP:0000790', 'HP:0000822', 'HP:0001873', 'HP:0001919', 'HP:0001937', 'HP:0003138', 'HP:0003259', 'HP:0005575', 'HP:0100519')
+
+my_hpo_ancestor <- get_ancestors(hpo, my_hpo)
+my_hpo_ancestor_no_link <- remove_links(hpo, my_hpo_ancestor)
+
+library(RColorBrewer)
+brewer.pal(3, 'Set3')
+# [1] "#8DD3C7" "#FFFFB3" "#BEBADA"
+
+my_colour <- as.numeric(my_hpo_ancestor_no_link %in% my_hpo)
+my_colour <- ifelse(my_colour == 1, yes = '#BEBADA', no = '#8DD3C7')
+onto_plot(hpo, terms = my_hpo_ancestor_no_link, fillcolor = my_colour, label = my_hpo_ancestor_no_link)
+onto_plot(hpo, terms = my_hpo_ancestor_no_link, fillcolor = my_colour)
+~~~~
+
+![Ontology plot of HPO terms associated with OMIM:612922](image/612922.png)
+
 # Disease HPO frequency
 
 HPO frequency and information content of HPO terms associated with OMIM diseases.

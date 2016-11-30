@@ -39,15 +39,20 @@ open(IN,'-|',"gunzip -c $disease") || die "Could not open $disease: $!\n";
 while(<IN>){
    chomp;
    my ($db, $db_object_id, $db_name, $qualifier, $hpo, $reference, $evidence, $modifier, $frequency, $with, $aspect, $synonym, $date, $assigned) = split(/\t/);
+   next unless $db eq 'OMIM';
    $hpo{$hpo} = 1;
    if (exists $lookup{$hpo}){
       my $index = scalar(@{$lookup{$hpo}});
-      $lookup{$hpo}[$index] = $db_name;
+      $lookup{$hpo}[$index]->{'DBNAME'} = $db_name;
+      $lookup{$hpo}[$index]->{'ID'} = $db_object_id;
    } else {
-      $lookup{$hpo}[0] = $db_name;
+      $lookup{$hpo}[0]->{'DBNAME'} = $db_name;
+      $lookup{$hpo}[0]->{'ID'} = $db_object_id;
    }
 }
 close(IN);
+
+my %id = ();
 
 foreach my $h (@ARGV){
    next unless exists $lookup{$h};
@@ -57,9 +62,29 @@ foreach my $h (@ARGV){
    foreach my $n (@{$lookup{$h}}){
       next if exists $check{$n};
       $check{$n} = 1;
-      print "\t$n\n";
+      print "\t$n->{'ID'}\t$n->{'DBNAME'}\n";
+      $id{$n->{'ID'}} = 1;
    }
    print "$h\t$number\n";
+}
+
+# omim_lookup.tsv was generated using romim
+if (-f '/SCRATCH/Tang/omim/omim_lookup.tsv'){
+   open(IN, '<', '/SCRATCH/Tang/omim/omim_lookup.tsv') || die "Could not open /SCRATCH/Tang/omim/omim_lookup.tsv: $!\n";
+   while(<IN>){
+      chomp;
+      # 100300  "ADAMS-OLIVER SYNDROME 1; AOS1" "ARHGAP31, CDGAP, KIAA1204, AOS1"       "Autosomal dominant {SNOMEDCT:263681008} {UMLS:C0443147} {HPO HP:0000006 UMLS:C0443147}"
+      my ($omim, $name, $gene, $model) = split(/\t/);
+      $gene =~ s/"//g;
+      my @gene = split(/,/, $gene);
+      my $g = $gene[0];
+      $model =~ s/\s{.*$//;
+      $model =~ s/^"//;
+      if (exists $id{$omim}){
+         print STDERR join("\t", $omim, $g, $model, $name), "\n";
+      }
+   }
+   close(IN);
 }
 
 __END__
