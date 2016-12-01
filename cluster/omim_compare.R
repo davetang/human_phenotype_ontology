@@ -63,12 +63,21 @@ make_term_matrix <- function(name1, name2, x, y){
   colnames(my_matrix)  <- c(paste('OMIM:', name1, sep = ''), paste('OMIM:', name2, sep = ''))
   return(my_matrix)
 }
+
+jaccard_index <- function(x, y){
+  i <- length(intersect(x, y))
+  d <- i/length(union(x,y))
+  return(d)
+}
 ############ End functions ############
 
 my_first_name  <- get_omim_name(my_first_omim)
 my_second_name <- get_omim_name(my_second_omim)
 my_first_hpo <- omim_to_hpo(my_first_omim)
 my_second_hpo <- omim_to_hpo(my_second_omim)
+
+my_ji <- jaccard_index(my_first_hpo, my_second_hpo)
+print(paste('The Jaccard Index for ', my_first_omim, ' and ', my_second_omim, ' is ', my_ji, sep=''))
 
 my_matrix <- make_term_matrix(my_first_omim, my_second_omim, my_first_hpo, my_second_hpo)
 
