@@ -275,3 +275,23 @@ HP:0100543      level: 5        disease associations: 1040
         cognitive impairment
 ~~~~
 
+# Density plot of all pairwise Jaccard Indexes
+
+~~~~{.r}
+setwd('/Users/davetang/github/human_phenotype_ontology/cluster')
+load('my_jaccard_matrix_all.Robj')
+my_ji <- my_jaccard_matrix[upper.tri(my_jaccard_matrix, diag = FALSE)]
+
+plot(density(my_ji))
+
+table(my_ji> 0.2)
+# 
+#    FALSE     TRUE 
+# 23773619   353312 
+
+library(ggplot2)
+ggplot(data = data.frame(d = my_ji), aes(x = d)) + geom_density()
+~~~~
+
+![Density plot of Jaccard Indexes](image/jaccard_density.png)
+
