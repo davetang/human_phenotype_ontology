@@ -8,7 +8,13 @@ if (length(args) < 1){
   stop('Please input at least one HPO ID')
 }
 
-load('information_content.Robj')
+# http://stackoverflow.com/questions/1815606/rscript-determine-path-of-the-executing-script
+initial.options <- commandArgs(trailingOnly = FALSE)
+file.arg.name <- "--file="
+script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
+script.basename <- dirname(script.name)
+
+load(paste(script.basename, '/information_content.Robj', sep=''))
 
 # initialise empty data frame to store results
 my_result <- data.frame(id = character(0), info = numeric(0), freq = numeric(0), stringsAsFactors = FALSE)
