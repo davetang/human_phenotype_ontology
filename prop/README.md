@@ -469,6 +469,12 @@ onto_plot(hpo, terms = my_hpo_ancestor_no_link, fillcolor = my_colour)
 
 ![Ontology plot of HPO terms associated with OMIM:612922](image/612922.png)
 
+Use the script `plot_hpo.R` to plot HPO terms. If your HPO terms are in a file and separated by semicolons, e.g. hpo.txt, you can run the script like so:
+
+~~~~{.bash}
+plot_hpo.R $(cat hpo.txt | tr ';' ' ')
+~~~~
+
 # Disease HPO frequency
 
 HPO frequency and information content of HPO terms associated with OMIM diseases.

@@ -33,7 +33,8 @@ random_string <- function(length=12){
   return(paste(my_rand, collapse=''))
 }
 
-my_outfile <- paste(random_string(), '.pdf', collapse='', sep = '')
+# my_outfile <- paste(random_string(), '.pdf', collapse='', sep = '')
+my_outfile <- 'hpo.pdf'
 
 pdf(file = my_outfile)
 
