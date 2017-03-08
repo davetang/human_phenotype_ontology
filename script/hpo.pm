@@ -3,11 +3,11 @@
 require Exporter;
 package hpo;
 @ISA = qw(Exporter);
-@EXPORT_OK = qw/hpo_to_name hpo_to_synonym hpo_to_level hpo_to_disease/;
+@EXPORT_OK = qw/hpo_to_name hpo_to_synonym hpo_to_level hpo_to_disease hpo_to_gene/;
 
 # download from http://purl.obolibrary.org/obo/hp.obo
 my $script_path = $0;
-$script_path =~ s/\w+\.pl$//;
+$script_path =~ s/\w+\.pl$/..\/data\//;
 my $obo = $script_path . 'hp.obo.gz';
 my $id = '';
 # HPO ID has hash key
@@ -58,7 +58,6 @@ while(<IN>){
 close(IN);
 
 my $disease = $script_path . 'phenotype_annotation.tab.gz';
-
 my %disease_lookup = ();
 open(IN,'-|',"gunzip -c $disease") || die "Could not open $disease: $!\n";
 while(<IN>){
@@ -72,6 +71,33 @@ while(<IN>){
    }
 }
 close(IN);
+
+my $phenotype_to_gene = $script_path . 'ALL_SOURCES_ALL_FREQUENCIES_phenotype_to_genes.txt.gz';
+my %phenotype_to_gene = ();
+open(IN,'-|',"gunzip -c $phenotype_to_gene") || die "Could not open $phenotype_to_gene: $!\n";
+while(<IN>){
+   chomp;
+   #Format: HPO-ID<tab>HPO-Name<tab>Gene-ID<tab>Gene-Name
+   #HP:0001459      1-3 toe syndactyly      2737    GLI3
+   my ($hpo, $name, $gene_id, $gene_symbol) = split(/\t/);
+   if (exists $disease_lookup{$hpo}){
+      my $index = scalar(@{$phenotype_to_gene{$hpo}});
+      $phenotype_to_gene{$hpo}[$index] = $gene_symbol;
+   } else {
+      $phenotype_to_gene{$hpo}[0] = $gene_symbol;
+   }
+}
+close(IN);
+
+sub hpo_to_gene {
+   my ($hpo) = @_;
+   if (exists $phenotype_to_gene{$hpo}){
+      my $n = scalar(@{$phenotype_to_gene{$hpo}});
+      return($n);
+   } else {
+      return("No genes associated with $hpo\n");
+   }
+}
 
 # return number of disease/s associated with HPO ID
 sub hpo_to_disease {

@@ -18,7 +18,7 @@ my $infile = shift or die $usage;
 
 # download from http://purl.obolibrary.org/obo/hp.obo
 my $script_path = $0;
-$script_path =~ s/\w+\.pl$//;
+$script_path =~ s/\w+\.pl$/..\/data\//;
 my $obo = $script_path . 'hp.obo.gz';
 my $id = '';
 my %lookup = ();

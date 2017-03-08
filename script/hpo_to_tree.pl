@@ -13,7 +13,7 @@ if (scalar(@ARGV) == 0){
 
 # download from http://purl.obolibrary.org/obo/hp.obo
 my $script_path = $0;
-$script_path =~ s/\w+\.pl$//;
+$script_path =~ s/\w+\.pl$/..\/data\//;
 my $obo = $script_path . 'hp.obo.gz';
 
 my $id = '';

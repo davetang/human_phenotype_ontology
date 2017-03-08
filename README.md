@@ -64,10 +64,11 @@ There is a direct match for `focal seizures` to `HP:0007359`. The term `deep set
 
 ## HPO ID to term/synonym
 
-The script `hpo_to_term.pl` lists all the synonyms for a HPO ID, the depth of the HPO term, and the number of OMIM disorders associated with the ID.
+The script `hpo_to_term.pl` lists all the synonyms for a HPO ID, the depth of the HPO term, the number of OMIM disorders and genes  associated with the ID.
 
 ```bash
-HP:0007359      level: 5        disease associations: 15
+script/hpo_to_term.pl HP:0007359
+HP:0007359      level: 5        disease associations: 15        gene associations: 42
         focal seizures
         partial seizures
 ```
