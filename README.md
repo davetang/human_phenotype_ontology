@@ -8,17 +8,19 @@ The [Human Phenotype Ontology](http://human-phenotype-ontology.github.io/) (HPO)
 
 The association of HPO terms to disorders allows potential disorders to be identified based on a patient's clinical phenotypes (Phenomizer) and can be used to prioritise genetic variants in an individual (Exomiser and Genomiser). The HPO resource has also been leveraged by others to help identify potential diseases and their associated genes (Phenolyzer).
 
-* [The Phenomizer](http://compbio.charite.de/phenomizer/): match a list of HPO terms to an OMIM disease
-* [The Exomiser](http://www.sanger.ac.uk/science/tools/exomiser): an ensemble of tools that can prioritise variants based on HPO terms and find new genes associated with known disease causing genes
-* [The Genomiser](http://exomiser.github.io/Exomiser/manual/7/quickstart/#genomiser): the Genomiser uses the Exomiser framework to analyse whole-genome data and has been especially tailored to include non-coding variants
-* [Phenolyzer](http://phenolyzer.usc.edu/): free text to list of genes that are related to the input
+* [The Phenomizer](http://compbio.charite.de/phenomizer/)<sup>2</sup>: match a list of HPO terms to an OMIM disease
+* [The Exomiser](http://www.sanger.ac.uk/science/tools/exomiser)<sup>3</sup>: an ensemble of tools that can prioritise variants based on HPO terms and find new genes associated with known disease causing genes
+* [The Genomiser](http://exomiser.github.io/Exomiser/manual/7/quickstart/#genomiser)<sup>4</sup>: the Genomiser uses the Exomiser framework to analyse whole-genome data and has been especially tailored to include non-coding variants
+* [Phenolyzer](http://phenolyzer.usc.edu/)<sup>5</sup>: free text to list of genes that are related to the input
 
-# Organisation (or lack thereof) of this repository
+# Organisation of this repository
 
 There are five directories in this repository.
 
 * cluster - cluster analysis on disorders
+* data - contains the data used for the scripts
 * exomiser - analysis using the Exomiser
+* gene - analysis using genes
 * phenolyzer - analysis using Phenolyzer
 * prop - analyses on the properties of HPO terms
 * script - basic scripts for working with HPO terms
@@ -180,4 +182,8 @@ HP:0000006;HP:0000028;HP:0000054;HP:0000074;HP:0000164;HP:0000175;HP:0000218;HP:
 # References
 
 1. [The Human Phenotype Ontology: a tool for annotating and analyzing human hereditary disease](https://www.ncbi.nlm.nih.gov/pubmed/18950739)
+2. [Clinical diagnostics in human genetics with semantic similarity searches in ontologies.](https://www.ncbi.nlm.nih.gov/pubmed/19800049)
+3. [Next-generation diagnostics and disease-gene discovery with the Exomiser](https://www.ncbi.nlm.nih.gov/pubmed/26562621)
+4. [A Whole-Genome Analysis Framework for Effective Identification of Pathogenic Regulatory Variants in Mendelian Disease](https://www.ncbi.nlm.nih.gov/pubmed/27569544)
+5. [Phenolyzer: phenotype-based prioritization of candidate genes for human diseases](https://www.ncbi.nlm.nih.gov/pubmed/26192085)
 
