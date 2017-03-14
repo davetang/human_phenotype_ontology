@@ -117,66 +117,81 @@ HP:0007359      15
 
 ## OMIM ID to HPO terms
 
-The script `omim_to_hpo.pl` finds HPO IDs associated with an OMIM disorder ID.
+The script `omim_to_hpo.pl` finds HPO IDs associated with an OMIM disorder ID and in addition, lists the number of disease and gene associations for each HPO term. This gives you an indication of how specific a HPO term is.
 
 ```bash
 script/omim_to_hpo.pl 147920
 OMIM:147920     #147920 KABUKI SYNDROME 1; KABUK1;;KABUKI SYNDROME;;KABUKI MAKE-UP SYNDROME; KMS;;NIIKAWA-KUROKI SYNDROME
-        HP:0000006      autosomal dominant inheritance
-        HP:0000028      cryptorchidism
-        HP:0000054      micropenis
-        HP:0000074      ureteropelvic junction obstruction
-        HP:0000164      abnormality of the teeth
-        HP:0000175      cleft palate
-        HP:0000218      high palate
-        HP:0000252      microcephaly
-        HP:0000358      posteriorly rotated ears
-        HP:0000365      hearing impairment
-        HP:0000400      macrotia
-        HP:0000403      recurrent otitis media
-        HP:0000431      wide nasal bridge
-        HP:0000437      depressed nasal tip
-        HP:0000486      strabismus
-        HP:0000508      ptosis
-        HP:0000535      sparse eyebrow
-        HP:0000592      blue sclerae
-        HP:0000637      long palpebral fissure
-        HP:0000851      congenital hypothyroidism
-        HP:0000957      cafe-au-lait spot
-        HP:0001007      hirsutism
-        HP:0001212      prominent fingertip pads
-        HP:0001249      intellectual disability
-        HP:0001250      seizures
-        HP:0001252      muscular hypotonia
-        HP:0001263      global developmental delay
-        HP:0001374      congenital hip dislocation
-        HP:0001382      joint hypermobility
-        HP:0001629      ventricular septal defect
-        HP:0001631      atria septal defect
-        HP:0001680      coarctation of aorta
-        HP:0001878      hemolytic anemia
-        HP:0001973      autoimmune thrombocytopenia
-        HP:0002023      anal atresia
-        HP:0002024      malabsorption
-        HP:0002025      anal stenosis
-        HP:0002100      recurrent aspiration pneumonia
-        HP:0002553      highly arched eyebrow
-        HP:0002566      intestinal malrotation
-        HP:0002650      scoliosis
-        HP:0003468      abnormality of the vertebrae
-        HP:0004322      short stature
-        HP:0004467      preauricular pit
-        HP:0004736      crossed fused renal ectopia
-        HP:0005218      anoperineal fistula
-        HP:0007655      eversion of lateral third of lower eyelids
-        HP:0008872      feeding difficulties in infancy
-        HP:0008897      postnatal growth retardation
-        HP:0009237      short 5th finger
-        HP:0010314      premature thelarche
+        HP:0000006      autosomal dominant inheritance  no. disease association: 2675   no. gene association: 1238
+        HP:0000028      cryptorchidism  no. disease association: 593    no. gene association: 455
+        HP:0000054      micropenis      no. disease association: 139    no. gene association: 137
+        HP:0000074      ureteropelvic junction obstruction      no. disease association: 10     no. gene association: 13
+        HP:0000164      abnormality of the teeth        no. disease association: 159    no. gene association: 561
+        HP:0000175      cleft palate    no. disease association: 586    no. gene association: 352
+        HP:0000218      high palate     no. disease association: 313    no. gene association: 340
+        HP:0000252      microcephaly    no. disease association: 959    no. gene association: 624
+        HP:0000358      posteriorly rotated ears        no. disease association: 127    no. gene association: 238
+        HP:0000365      hearing impairment      no. disease association: 483    no. gene association: 888
+        HP:0000400      macrotia        no. disease association: 190    no. gene association: 122
+        HP:0000403      recurrent otitis media  no. disease association: 54     no. gene association: 56
+        HP:0000431      wide nasal bridge       no. disease association: 298    no. gene association: 317
+        HP:0000437      depressed nasal tip     no. disease association: 12     no. gene association: 17
+        HP:0000486      strabismus      no. disease association: 581    no. gene association: 521
+        HP:0000508      ptosis  no. disease association: 489    no. gene association: 397
+        HP:0000535      sparse eyebrow  no. disease association: 70     no. gene association: 62
+        HP:0000592      blue sclerae    no. disease association: 89     no. gene association: 57
+        HP:0000637      long palpebral fissure  no. disease association: 32     no. gene association: 20
+        HP:0000851      congenital hypothyroidism       no. disease association: 14     no. gene association: 15
+        HP:0000957      cafe-au-lait spot       no. disease association: 79     no. gene association: 81
+        HP:0001007      hirsutism       no. disease association: 64     no. gene association: 138
+        HP:0001212      prominent fingertip pads        no. disease association: 9      no. gene association: 7
+        HP:0001249      intellectual disability no. disease association: 971    no. gene association: 1114
+        HP:0001250      seizures        no. disease association: 1295   no. gene association: 1019
+        HP:0001252      muscular hypotonia      no. disease association: 1014   no. gene association: 943
+        HP:0001263      global developmental delay      no. disease association: 734    no. gene association: 911
+        HP:0001374      congenital hip dislocation      no. disease association: 41     no. gene association: 47
+        HP:0001382      joint hypermobility     no. disease association: 234    no. gene association: 199
+        HP:0001629      ventricular septal defect       no. disease association: 304    no. gene association: 206
+        HP:0001631      atria septal defect     no. disease association: 244    no. gene association: 205
+        HP:0001680      coarctation of aorta    no. disease association: 42     no. gene association: 47
+        HP:0001878      hemolytic anemia        no. disease association: 73     no. gene association: 84
+        HP:0001973      autoimmune thrombocytopenia     no. disease association: 14     no. gene association: 24
+        HP:0002023      anal atresia    no. disease association: 68     no. gene association: 105
+        HP:0002024      malabsorption   no. disease association: 147    no. gene association: 172
+        HP:0002025      anal stenosis   no. disease association: 18     no. gene association: 25
+        HP:0002100      recurrent aspiration pneumonia  no. disease association: 6      no. gene association: 4
+        HP:0002553      highly arched eyebrow   no. disease association: 96     no. gene association: 82
+        HP:0002566      intestinal malrotation  no. disease association: 92     no. gene association: 66
+        HP:0002650      scoliosis       no. disease association: 746    no. gene association: 567
+        HP:0003468      abnormality of the vertebrae    no. disease association: 20     no. gene association: 291
+        HP:0004322      short stature   no. disease association: 1351   no. gene association: 811
+        HP:0004467      preauricular pit        no. disease association: 34     no. gene association: 37
+        HP:0004736      crossed fused renal ectopia     no. disease association: 2      no. gene association: 5
+        HP:0005218      anoperineal fistula     no. disease association: 1      no. gene association: 2
+        HP:0007655      eversion of lateral third of lower eyelids      no. disease association: 2      no. gene association: 4
+        HP:0008872      feeding difficulties in infancy no. disease association: 240    no. gene association: 287
+        HP:0008897      postnatal growth retardation    no. disease association: 87     no. gene association: 101
+        HP:0009237      short 5th finger        no. disease association: 15     no. gene association: 25
+        HP:0010314      premature thelarche     no. disease association: 3      no. gene association: 5
 51 HPO terms
 
 HP:0000006;HP:0000028;HP:0000054;HP:0000074;HP:0000164;HP:0000175;HP:0000218;HP:0000252;HP:0000358;HP:0000365;HP:0000400;HP:0000403;HP:0000431;HP:0000437;HP:0000486;HP:0000508;HP:0000535;HP:0000592;HP:0000637;HP:0000851;HP:0000957;HP:0001007;HP:0001212;HP:0001249;HP:0001250;HP:0001252;HP:0001263;HP:0001374;HP:0001382;HP:0001629;HP:0001631;HP:0001680;HP:0001878;HP:0001973;HP:0002023;HP:0002024;HP:0002025;HP:0002100;HP:0002553;HP:0002566;HP:0002650;HP:0003468;HP:0004322;HP:0004467;HP:0004736;HP:0005218;HP:0007655;HP:0008872;HP:0008897;HP:0009237;HP:0010314;
 
+---------------------------
+
+# anoperineal fistula is only associated to one disorder
+script/hpo_to_disease.pl HP:0005218
+HP:0005218
+        147920  #147920 KABUKI SYNDROME 1; KABUK1;;KABUKI SYNDROME;;KABUKI MAKE-UP SYNDROME; KMS;;NIIKAWA-KUROKI SYNDROME
+HP:0005218      1
+
+# HP:0010314      premature thelarche     no. disease association: 3      no. gene association: 5
+script/hpo_to_disease.pl HP:0010314 
+HP:0010314
+        147920  #147920 KABUKI SYNDROME 1; KABUK1;;KABUKI SYNDROME;;KABUKI MAKE-UP SYNDROME; KMS;;NIIKAWA-KUROKI SYNDROME
+        180849  #180849 RUBINSTEIN-TAYBI SYNDROME 1; RSTS1;;RUBINSTEIN SYNDROME;;BROAD THUMBS AND GREAT TOES, CHARACTERISTIC FACIES, AND MENTAL RETARDATION;;BROAD THUMB-HALLUX SYNDROME
+        615346  #615346 PRECOCIOUS PUBERTY, CENTRAL, 2; CPPB2
+HP:0010314      3
 ```
 
 # References

@@ -4,7 +4,7 @@
 
 use strict;
 use warnings;
-use hpo qw/hpo_to_name/;
+use hpo qw/hpo_to_name hpo_to_disease hpo_to_gene/;
 
 my $usage = "Usage: $0 <OMIM ID> [OMIM IDs]\n";
 
@@ -40,6 +40,8 @@ open(IN,'-|',"gunzip -c $disease") || die "Could not open $disease: $!\n";
 while(<IN>){
    chomp;
    my ($db, $db_object_id, $db_name, $qualifier, $hpo, $reference, $evidence, $modifier, $frequency, $with, $aspect, $synonym, $date, $assigned) = split(/\t/);
+
+   # store only OMIM disorders
    next unless $db eq 'OMIM';
 
    # just keep the numbers OMIM:100300
@@ -55,25 +57,35 @@ while(<IN>){
 }
 close(IN);
 
-my $phenolyzer_input = '';
-
 foreach my $h (@ARGV){
+   my $phenolyzer_input = '';
    $h =~ s/^OMIM://;
+   $h =~ s/(\d+).*$/$1/;
    
-   next unless exists $lookup{$h};
-   my %check = ();
-   my $counter = 0;
-   print "OMIM:$h\t$name{$h}\n";
-   foreach my $n (@{$lookup{$h}}){
-      next if exists $check{$n};
-      $check{$n} = 1;
-      $phenolyzer_input .= "$n;";
-      ++$counter;
-      my $term = hpo_to_name($n);
-      print "\t$n\t$term\n";
+   if (exists $lookup{$h}){
+      my %check = ();
+      my $counter = 0;
+      print "OMIM:$h\t$name{$h}\n";
+      foreach my $n (@{$lookup{$h}}){
+         next if exists $check{$n};
+         $check{$n} = 1;
+         $phenolyzer_input .= "$n;";
+         ++$counter;
+         my $term = hpo_to_name($n);
+         my $disease = hpo_to_disease($n);
+         my $gene = hpo_to_gene($n);
+         print "\t$n\t$term\tno. disease association: $disease\tno. gene association: $gene\n";
+      }
+
+      print "$counter HPO terms\n\n";
+      print "$phenolyzer_input\n\n";
+      print "---------------------------\n\n";
+
+   } else {
+      print "Your input $h was not found\n\n";
+      print "---------------------------\n\n";
    }
-   print "$counter HPO terms\n\n";
-   print "$phenolyzer_input\n\n";
+
 }
 
 __END__
