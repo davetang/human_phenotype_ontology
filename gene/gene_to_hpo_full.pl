@@ -21,14 +21,15 @@ my $hpo_total = scalar(@hpo);
 
 my $script_path = $0;
 $script_path =~ s/\w+\.pl$/..\/data\//;
-my $gene_to_hpo = $script_path . 'ALL_SOURCES_ALL_FREQUENCIES_genes_to_phenotype.txt.gz';
+my $gene_to_hpo = $script_path . 'ALL_SOURCES_ALL_FREQUENCIES_phenotype_to_genes.txt.gz';
 
 my $tally = 0;
 open(IN, '-|', "gunzip -c $gene_to_hpo") || die "Could not open $gene_to_hpo: $!\n";
 while(<IN>){
    chomp;
    next if (/^#/);
-   my ($entrez_id, $entrez_gene_symbol, $hpo_name, $hpo_id) = split(/\t/);
+   # HP:0002683      Abnormality of the calvaria     84295   PHF6
+   my ($hpo_id, $hpo_name, $entrez, $entrez_gene_symbol) = split(/\t/);
    if ($entrez_gene_symbol eq $gene){
       ++$tally;
       print "$_\n";

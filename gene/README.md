@@ -115,7 +115,7 @@ There were 11 matches for FGFR2
 
 ## Example usage
 
-I'm interested in the HPO terms associated with the gene [SLC2A1](https://ghr.nlm.nih.gov/gene/SLC2A1), which encodes GLUT1. The GLUT1 protein helps transport glucose into cells from blood.
+I may be interested in the HPO terms associated with the gene [SLC2A1](https://ghr.nlm.nih.gov/gene/SLC2A1), which encodes GLUT1 (a protein that helps transport glucose into cells from blood) because I found a deleterious mutation in this gene in a patient. Are there any OMIM disorders associated with this gene?
 
 ```bash
 gene_to_omim.pl SLC2A1
@@ -123,7 +123,7 @@ SLC2A1  608885
 There were 1 matches for SLC2A1
 ```
 
-SLC2A1 is associated with [STOMATIN-DEFICIENT CRYOHYDROCYTOSIS WITH NEUROLOGIC DEFECTS](https://www.omim.org/entry/608885).
+SLC2A1 is associated with [STOMATIN-DEFICIENT CRYOHYDROCYTOSIS WITH NEUROLOGIC DEFECTS](https://www.omim.org/entry/608885). What are the HPO terms associated with this gene? Do they match phenotypes in the patient?
 
 ```bash
 gene_to_hpo.pl SLC2A1
@@ -156,4 +156,13 @@ rm hpo.pdf
 
 ![HPO terms associated with SLC2A1](image/SLC2A1_full.png)
 ![HPO terms associated with SLC2A1](image/SLC2A1_condensed.png)
+
+The script `gene_to_hpo_full.pl` returns all HPO terms associated with a gene, including parent terms, unlike `gene_to_hpo.pl` which only returns the terminal term.
+
+```bash
+gene_to_hpo_full.pl SLC2A1
+
+...
+There were 71 matches for SLC2A1
+```
 
