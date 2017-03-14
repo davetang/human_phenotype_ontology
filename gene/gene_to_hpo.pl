@@ -3,8 +3,21 @@
 use strict;
 use warnings;
 
-my $usage = "Usage: $0 <gene symbol>\n";
-my $gene = shift or die $usage;
+my $usage = "Usage: $0 <gene symbol> [HPO ID]\n";
+
+if (@ARGV == 0){
+   die $usage;
+}
+
+my $gene = shift(@ARGV);
+
+my @hpo = ();
+if (scalar(@ARGV) > 0){
+   @hpo = @ARGV;
+}
+my @hpo_match = ();
+my $hpo_match = 0;
+my $hpo_total = scalar(@hpo);
 
 my $script_path = $0;
 $script_path =~ s/\w+\.pl$/..\/data\//;
@@ -19,11 +32,20 @@ while(<IN>){
    if ($entrez_gene_symbol eq $gene){
       ++$tally;
       print "$_\n";
+      foreach my $h (@hpo){
+         $h =~ s/,//g;
+         if ($hpo_id eq $h){
+            ++$hpo_match;
+            my $tmp = $hpo_id . " $hpo_name";
+            push(@hpo_match, $tmp);
+         }
+      }
    }
 }
 close(IN);
 
 warn("There were $tally matches for $gene\n");
+warn("There were $hpo_match match/es out of $hpo_total input HPO terms @hpo_match\n") if $hpo_total > 0;
 
 exit(0);
 

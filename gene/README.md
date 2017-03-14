@@ -113,3 +113,46 @@ FGFR2   101200
 There were 11 matches for FGFR2
 ```
 
+## Example usage
+
+I'm interested in the HPO terms associated with the gene [SLC2A1](https://ghr.nlm.nih.gov/gene/SLC2A1), which encodes GLUT1. The GLUT1 protein helps transport glucose into cells from blood.
+
+```bash
+gene_to_omim.pl SLC2A1
+SLC2A1  608885
+There were 1 matches for SLC2A1
+```
+
+SLC2A1 is associated with [STOMATIN-DEFICIENT CRYOHYDROCYTOSIS WITH NEUROLOGIC DEFECTS](https://www.omim.org/entry/608885).
+
+```bash
+gene_to_hpo.pl SLC2A1
+6513    SLC2A1  Hepatomegaly    HP:0002240
+6513    SLC2A1  Intellectual disability HP:0001249
+6513    SLC2A1  Seizures        HP:0001250
+6513    SLC2A1  Short stature   HP:0004322
+6513    SLC2A1  Hyperreflexia   HP:0001347
+6513    SLC2A1  Hypoglycorrhachia       HP:0011972
+6513    SLC2A1  Cataract        HP:0000518
+6513    SLC2A1  Global developmental delay      HP:0001263
+6513    SLC2A1  Splenomegaly    HP:0001744
+6513    SLC2A1  Hemolytic anemia        HP:0001878
+6513    SLC2A1  Jaundice        HP:0000952
+6513    SLC2A1  Microcephaly    HP:0000252
+6513    SLC2A1  Hypertonia      HP:0001276
+6513    SLC2A1  Nystagmus       HP:0000639
+There were 14 matches for SLC2A1
+```
+
+Visualise the HPO terms.
+
+```bash
+../prop/plot_hpo.R HP:0002240 HP:0001249 HP:0001250 HP:0004322 HP:0001347 HP:0011972 HP:0000518 HP:0001263 HP:0001744 HP:0001878 HP:0000952 HP:0000252 HP:0001276 HP:0000639
+convert hpo.pdf hpo.png
+mv hpo-0.png image/SLC2A1_full.png
+rm hpo.pdf
+```
+
+![HPO terms associated with SLC2A1](image/SLC2A1_full.png)
+![HPO terms associated with SLC2A1](image/SLC2A1_condensed.png)
+
