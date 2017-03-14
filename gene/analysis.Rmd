@@ -1,0 +1,79 @@
+---
+title: "Clustering genes based on HPO associations"
+output: html_notebook
+---
+
+The Human Phenotype Ontology (HPO) team have created a standardised vocabulary of phenotypic abnormalities and associated them to genes. These associations are in the file `ALL_SOURCES_ALL_FREQUENCIES_phenotype_to_genes.txt.gz`, which I have saved in the `data` folder of this repository.
+
+```{r}
+setwd('~/github/human_phenotype_ontology/gene')
+pg <- read.table('../data/ALL_SOURCES_ALL_FREQUENCIES_phenotype_to_genes.txt.gz', header = FALSE, stringsAsFactors = FALSE, quote='', sep="\t", comment='#')
+names(pg) <- c('hpo', 'hpo_def', 'entrez', 'gene')
+head(pg)
+
+length(unique(pg$gene))
+```
+
+On average, how many HPO terms are associated with genes?
+
+```{r}
+library(dplyr)
+pg %>%
+  select(hpo, gene) %>%
+  group_by(gene) %>%
+  summarise(n = n()) %>%
+  summarise(total = n(), mean = mean(n), median = median(n))
+```
+
+Create a function that retrieves the associated HPO terms for a gene symbol.
+
+```{r}
+gene_to_hpo <- function(x){
+  r <- pg %>% filter(gene == x) %>% select(hpo)
+  return(r$hpo)
+}
+gene_to_hpo('SLC39A5')
+```
+
+I will use the Jaccard index to measure similarity.
+
+```{r}
+jaccard_index <- function(x, y){
+  i <- length(intersect(x, y))
+  d <- i/length(union(x,y))
+  return(d)
+}
+jaccard_index(gene_to_hpo('CREBBP'), gene_to_hpo('EP300'))
+```
+
+How many pairwise comparisons would there be if I wanted to pre-calculate all the Jaccard indexes?
+
+```{r}
+choose(length(unique(pg$gene)), 2)
+```
+
+We'll use the `combn()` function to create a matrix of values containing all pairwise combinations.
+
+```{r}
+my_gene <- unique(pg$gene)
+my_jaccard_indexes <- apply(expand.grid(1:length(my_gene), 1:length(my_gene)),
+                            1,
+                            function(x) jaccard_index(gene_to_hpo(my_gene[x[1]]), gene_to_hpo(my_gene[x[2]]))
+                            )
+
+my_jaccard_matrix <- matrix(my_jaccard_indexes, nrow = length(my_gene))
+
+row.names(my_jaccard_matrix) <- my_gene
+colnames(my_jaccard_matrix) <- my_gene
+save(my_jaccard_matrix, file = 'my_jaccard_matrix_all.Robj')
+```
+
+Let's perform some sanity checks.
+
+```{r}
+jaccard_index(gene_to_hpo('CREBBP'), gene_to_hpo('EP300'))
+
+my_jaccard_matrix[grep(pattern = 'EP300', x = my_gene), grep(pattern = 'CREBBP', x = my_gene)]
+my_jaccard_matrix[grep(pattern = 'CREBBP', x = my_gene), grep(pattern = 'EP300', x = my_gene)]
+```
+

@@ -3,10 +3,10 @@ title: "Clustering OMIM disorders"
 output: html_notebook
 ---
 
-The Human Phenotype Ontology (HPO) team have created a standardised vocabulary of phenotypic abnormalities and associated them to OMIM disorders. These associations are in the file `phenotype_annotation.tab`, which I have saved in this repository.
+The Human Phenotype Ontology (HPO) team have created a standardised vocabulary of phenotypic abnormalities and associated them to OMIM disorders. These associations are in the file `phenotype_annotation.tab.gz`, which I have saved in this repository.
 
 ```{r}
-pa <- read.table('../script/phenotype_annotation.tab.gz', header = FALSE, stringsAsFactors = FALSE, quote='', sep="\t", comment='')
+pa <- read.table('../data/phenotype_annotation.tab.gz', header = FALSE, stringsAsFactors = FALSE, quote='', sep="\t", comment='')
 names(pa) <- c('DB', 'DB_Object_ID', 'DB_Name', 'Qualifier', 'HPO', 'DB_Reference', 'Evidence_code', 'Onset_modifier', 'Frequency_modifier', 'With', 'Aspect', 'Synonym', 'Date', 'Assigned_by')
 head(pa)
 ```
