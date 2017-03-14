@@ -148,7 +148,7 @@ Visualise the HPO terms.
 
 ```bash
 ../prop/plot_hpo.R HP:0002240 HP:0001249 HP:0001250 HP:0004322 HP:0001347 HP:0011972 HP:0000518 HP:0001263 HP:0001744 HP:0001878 HP:0000952 HP:0000252 HP:0001276 HP:0000639
-convert -density 150 -quality 100 hpo.pdf hpo.png
+convert -density 300 -quality 100 hpo.pdf hpo.png
 mv hpo-0.png image/SLC2A1_full.png
 mv hpo-1.png image/SLC2A1_condensed.png
 rm hpo.pdf
