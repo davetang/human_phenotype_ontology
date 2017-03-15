@@ -166,3 +166,66 @@ gene_to_hpo_full.pl SLC2A1
 There were 71 matches for SLC2A1
 ```
 
+## Semantically similar genes
+
+I have created a matrix of Jaccard indices between all the genes based on their associated HPO terms.
+
+```bash
+# which generates the R object
+# my_jaccard_matrix_gene_all.Robj
+jaccard_all.R
+```
+
+We can use this matrix to find semantically similar genes.
+
+```R
+load("my_jaccard_matrix_gene_all.Robj")
+
+diag(my_jaccard_matrix) <- rep(0, 3407)
+my_jaccard_matrix[upper.tri(my_jaccard_matrix)] <- 0
+
+table(my_jaccard_matrix > 0.99)
+
+   FALSE     TRUE 
+11606901      748 
+
+head(which(my_jaccard_matrix > 0.99, arr.ind = TRUE, useNames = FALSE))
+     [,1] [,2]
+[1,]    8    7
+[2,]   15    7
+[3,]   15    8
+[4,]   28   26
+[5,]   84   80
+[6,]   87   80
+
+my_mat <- which(my_jaccard_matrix > 0.99, arr.ind = TRUE, useNames = FALSE)
+dim(my_mat)
+[1] 748   2
+
+df <- data.frame(x = row.names(my_jaccard_matrix)[my_mat[,1]], y = colnames(my_jaccard_matrix)[my_mat[,2]])
+head(df, 20)
+         x          y
+1    GABRD     KCNAB2
+2     RERE     KCNAB2
+3     RERE      GABRD
+4     GPC3       GPC4
+5    PRKG1        LOX
+6     MYLK        LOX
+7     MYLK      PRKG1
+8     SPIB      MMEL1
+9  POU2AF1      MMEL1
+10 TNFSF15      MMEL1
+11   TNPO3      MMEL1
+12 POU2AF1       SPIB
+13 TNFSF15       SPIB
+14   TNPO3       SPIB
+15 TNFSF15    POU2AF1
+16   TNPO3    POU2AF1
+17   SEC63     PRKCSH
+18   TNPO3    TNFSF15
+19     IPW SNORD115-1
+20   PWRN1 SNORD115-1
+```
+
+If we look up line number 7, we will find that MYLK is associated with [AORTIC ANEURYSM, FAMILIAL THORACIC 7](https://www.omim.org/entry/613780) and PRKG1 is associated with [AORTIC ANEURYSM, FAMILIAL THORACIC 8](https://www.omim.org/entry/615436).
+

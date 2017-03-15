@@ -52,20 +52,19 @@ How many pairwise comparisons would there be if I wanted to pre-calculate all th
 choose(length(unique(pg$gene)), 2)
 ```
 
-We'll use the `combn()` function to create a matrix of values containing all pairwise combinations.
+We can use the `combn()` function to create a matrix of values containing all pairwise combinations. However, it doesn't take too long to calculate the entire matrix.
 
 ```{r}
 my_gene <- unique(pg$gene)
-my_jaccard_indexes <- apply(expand.grid(1:length(my_gene), 1:length(my_gene)),
-                            1,
-                            function(x) jaccard_index(gene_to_hpo(my_gene[x[1]]), gene_to_hpo(my_gene[x[2]]))
-                            )
+my_gene_hpo <- sapply(my_gene, gene_to_hpo)
 
+my_jaccard_indexes <- apply(expand.grid(1:length(my_gene), 1:length(my_gene)), 1, function(x) jaccard_index(my_gene_hpo[[x[2]]], my_gene_hpo[[x[1]]]))
 my_jaccard_matrix <- matrix(my_jaccard_indexes, nrow = length(my_gene))
 
 row.names(my_jaccard_matrix) <- my_gene
 colnames(my_jaccard_matrix) <- my_gene
-save(my_jaccard_matrix, file = 'my_jaccard_matrix_all.Robj')
+
+save(my_jaccard_matrix, file = 'my_jaccard_matrix_gene_all.Robj')
 ```
 
 Let's perform some sanity checks.
