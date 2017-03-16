@@ -181,8 +181,12 @@ We can use this matrix to find semantically similar genes.
 ```R
 load("my_jaccard_matrix_gene_all.Robj")
 
-diag(my_jaccard_matrix) <- rep(0, 3407)
-my_jaccard_matrix[upper.tri(my_jaccard_matrix)] <- 0
+my_jaccard_matrix[upper.tri(my_jaccard_matrix, diag = TRUE)] <- 0
+
+# similarity on average
+summary(my_jaccard_matrix[lower.tri(my_jaccard_matrix)])
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00000 0.02186 0.05618 0.07310 0.10700 1.00000
 
 table(my_jaccard_matrix > 0.99)
 
@@ -228,4 +232,37 @@ head(df, 20)
 ```
 
 If we look up line number 7, we will find that MYLK is associated with [AORTIC ANEURYSM, FAMILIAL THORACIC 7](https://www.omim.org/entry/613780) and PRKG1 is associated with [AORTIC ANEURYSM, FAMILIAL THORACIC 8](https://www.omim.org/entry/615436).
+
+### Subset of genes
+
+Obtaining the indices for a subset of genes: NRAS, RIT1, SOS1, RAF1, BRAF, KRAS, PTPN11, SOS2, LZTR1, NS2.
+
+```r
+my_gene <- c('NRAS', 'RIT1', 'SOS1', 'RAF1', 'BRAF', 'KRAS', 'PTPN11', 'SOS2', 'LZTR1', 'NS2')
+
+# check if all genes exist
+my_gene %in% colnames(my_jaccard_matrix)
+ [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE
+
+my_gene <- my_gene[my_gene %in% colnames(my_jaccard_matrix)]
+
+df <- data.frame(x = combn(my_gene, m=2)[1,],
+                 y = combn(my_gene, m=2)[2,],
+                 z = apply(combn(my_gene, m=2), 2, function(x) my_jaccard_matrix[x[1], x[2]]))
+
+head(df)
+     x      y         z
+1 NRAS   RIT1 0.4139887
+2 NRAS   SOS1 0.4200743
+3 NRAS   RAF1 0.4123539
+4 NRAS   BRAF 0.4337838
+5 NRAS   KRAS 0.6109375
+6 NRAS PTPN11 0.3897281
+
+summary(df$z)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.3897  0.4201  0.5137  0.5556  0.6232  0.9565
+```
+
+This list of genes are all associated with [Noonan syndrome](https://www.omim.org/phenotypicSeries/PS163950) and from the summary, the median value of this subset is much higher than the median of all Jaccard indices.
 
