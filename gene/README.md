@@ -264,5 +264,9 @@ summary(df$z)
  0.3897  0.4201  0.5137  0.5556  0.6232  0.9565
 ```
 
-This list of genes are all associated with [Noonan syndrome](https://www.omim.org/phenotypicSeries/PS163950) and from the summary, the median value of this subset is much higher than the median of all Jaccard indices.
+This list of genes are all associated with [Noonan syndrome](https://www.omim.org/phenotypicSeries/PS163950) and from the summary, the median value of this subset is much higher than the median of all Jaccard indices. To create a graph of these genes, use `plot_gene_list.R`; the input file for this script is simply a list of genes on a separate line.
+
+```bash
+plot_gene_list.R noonan.txt
+```
 
