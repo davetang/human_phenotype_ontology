@@ -43,7 +43,10 @@ df <- data.frame(from = combn(my_gene, m=2)[1,],
                  weight = apply(combn(my_gene, m=2), 2, function(x) my_jaccard_matrix[x[1], x[2]]))
 
 my_summary <- summary(df$weight)
-df <- subset(df, weight > as.vector(my_summary['Median']))
+# df <- subset(df, weight > as.vector(my_summary['Median']))
+# df <- subset(df, weight > 0.107)
+# use the third quartile to limit the number of edges
+df <- subset(df, weight > as.vector(my_summary['3rd Qu.']))
 
 net <- graph.data.frame(df, directed = FALSE)
 
@@ -54,8 +57,8 @@ ceb <- cluster_edge_betweenness(net)
 my_pdf <- paste(my_base, '.pdf', sep='')
 pdf(file = my_pdf, width = 10, height = 10)
 
-par(mar=rep(.1, 4))
-plot(ceb, net)
+par(mar=c(0,0,2,0))
+plot(ceb, net, main = paste('Edge density: ', round(edge_density(net, loops = FALSE), 3), sep=''))
 
 par(mar=orig_mar)
 dendPlot(ceb, mode="hclust")
