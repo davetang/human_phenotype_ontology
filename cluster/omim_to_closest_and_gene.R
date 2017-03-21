@@ -31,9 +31,8 @@ initial.options <- commandArgs(trailingOnly = FALSE)
 file.arg.name <- "--file="
 script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
 script.basename <- dirname(script.name)
-my_base <- gsub('cluster', '', script.basename)
 
-pa <- read.table(paste(my_base, '/script/phenotype_annotation.tab.gz', sep=''), header = FALSE, stringsAsFactors = FALSE, quote='', sep="\t", comment='')
+pa <- read.table(paste(script.basename, '/../data/phenotype_annotation.tab.gz', sep=''), header = FALSE, stringsAsFactors = FALSE, quote='', sep="\t", comment='')
 names(pa) <- c('DB', 'DB_Object_ID', 'DB_Name', 'Qualifier', 'HPO', 'DB_Reference', 'Evidence_code', 'Onset_modifier', 'Frequency_modifier', 'With', 'Aspect', 'Synonym', 'Date', 'Assigned_by')
 omim <- filter(pa, DB == 'OMIM')
 
@@ -43,9 +42,10 @@ if (!my_check){
   stop('Input OMIM ID does not exist in database')
 }
 
-load(paste(my_base, '/cluster/my_jaccard_matrix_all.Robj', sep=''))
+load(paste(script.basename, '/my_jaccard_matrix_all.Robj', sep=''))
 
 my_result <- my_jaccard_matrix[my_omim,]
+my_result <- round(my_result, 3)
 my_id     <- names(my_result)
 lookup    <- omim %>% distinct(DB_Object_ID, DB_Name)
 my_name   <- sapply(lookup$DB_Name, function(x) strsplit(x, split = ";")[[1]][1])
@@ -67,5 +67,5 @@ for (i in 1:nrow(my_top)){
    my_top$model[i] <- my_model
 }
 
-print(my_top)
+write.table(my_top, file = paste(my_omim, '.tsv', sep=''), quote = FALSE, sep ="\t", row.names = FALSE)
 

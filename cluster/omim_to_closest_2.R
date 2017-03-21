@@ -17,14 +17,13 @@ initial.options <- commandArgs(trailingOnly = FALSE)
 file.arg.name <- "--file="
 script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
 script.basename <- dirname(script.name)
-my_base <- gsub('cluster', '', script.basename)
 
 my_omim <- as.character(args[1])
 
 suppressPackageStartupMessages(library(dplyr))
 library(dplyr)
 
-pa <- read.table(paste(my_base, '/script/phenotype_annotation.tab.gz', sep=''), header = FALSE, stringsAsFactors = FALSE, quote='', sep="\t", comment='')
+pa <- read.table(paste(script.basename, '/../data/phenotype_annotation.tab.gz', sep=''), header = FALSE, stringsAsFactors = FALSE, quote='', sep="\t", comment='')
 names(pa) <- c('DB', 'DB_Object_ID', 'DB_Name', 'Qualifier', 'HPO', 'DB_Reference', 'Evidence_code', 'Onset_modifier', 'Frequency_modifier', 'With', 'Aspect', 'Synonym', 'Date', 'Assigned_by')
 omim <- filter(pa, DB == 'OMIM')
 
@@ -34,7 +33,7 @@ if (!my_check){
   stop('Input OMIM ID does not exist in database')
 }
 
-load(paste(my_base, '/cluster/my_jaccard_matrix_all.Robj', sep=''))
+load(paste(script.basename, '/my_jaccard_matrix_all.Robj', sep=''))
 
 my_result <- my_jaccard_matrix[my_omim,]
 my_id     <- names(my_result)
