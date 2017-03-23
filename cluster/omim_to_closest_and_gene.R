@@ -18,13 +18,13 @@ if("dplyr" %in% rownames(installed.packages()) == FALSE){
 library(dplyr)
 
 args <- commandArgs(TRUE)
-if (length(args) != 2){
-  stop('Please input your OMIM API key and a single OMIM ID')
+if (length(args) != 3){
+  stop('Please input your OMIM API key, a single OMIM ID, and number of results to return')
 }
 
 my_key  <- set_key(as.character(args[1]))
 my_omim <- as.character(args[2])
-
+my_number <- as.character(args[3])
 
 # http://stackoverflow.com/questions/1815606/rscript-determine-path-of-the-executing-script
 initial.options <- commandArgs(trailingOnly = FALSE)
@@ -44,14 +44,13 @@ if (!my_check){
 
 load(paste(script.basename, '/my_jaccard_matrix_all.Robj', sep=''))
 
-my_result <- my_jaccard_matrix[my_omim,]
-my_result <- round(my_result, 3)
+my_result <- round(my_jaccard_matrix[my_omim,], 3)
 my_id     <- names(my_result)
 lookup    <- omim %>% distinct(DB_Object_ID, DB_Name)
 my_name   <- sapply(lookup$DB_Name, function(x) strsplit(x, split = ";")[[1]][1])
 
 my_df <- data.frame(omim = my_id, jaccard = my_result, name = my_name, stringsAsFactors = FALSE)
-my_top <- my_df %>% arrange(desc(jaccard)) %>% select(omim, jaccard, name) %>% head(n = 20)
+my_top <- my_df %>% arrange(desc(jaccard)) %>% select(omim, jaccard, name) %>% head(n = my_number)
 
 for (i in 1:nrow(my_top)){
    my_search <- get_omim(my_top$omim[i], geneMap = TRUE, clinicalSynopsis = TRUE)
@@ -64,8 +63,9 @@ for (i in 1:nrow(my_top)){
       my_model <- NA
    }
    my_top$gene[i] <- my_gene
+   my_model <- sub("\\s\\{.*", '', my_model, perl = TRUE)
    my_top$model[i] <- my_model
 }
 
-write.table(my_top, file = paste(my_omim, '.tsv', sep=''), quote = FALSE, sep ="\t", row.names = FALSE)
+write.table(my_top, file = paste(my_omim, '_gene.tsv', sep=''), quote = FALSE, sep ="\t", row.names = FALSE)
 

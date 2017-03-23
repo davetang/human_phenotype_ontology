@@ -17,10 +17,10 @@ The association of HPO terms to disorders allows potential disorders to be ident
 
 There are five directories in this repository.
 
-* cluster - cluster analysis on disorders
+* cluster - cluster analysis on OMIM phenotypes
 * data - contains the data used for the scripts
 * exomiser - analysis using the Exomiser
-* gene - analysis using genes
+* gene - analyses using genes
 * phenolyzer - analysis using Phenolyzer
 * prop - analyses on the properties of HPO terms
 * script - basic scripts for working with HPO terms
