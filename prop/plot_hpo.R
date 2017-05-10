@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 #
-# Usage: plot_hpo.R <HPO id> <HPO id> [HPO id]
+# Usage: plot_hpo.R <HPO id> [HPO id] [HPO id]
 #
 
 suppressPackageStartupMessages(library(ontologyPlot))
@@ -14,8 +14,8 @@ if("ontologyPlot" %in% rownames(installed.packages()) == FALSE){
 }
 
 args <- commandArgs(TRUE)
-if (length(args) < 2){
-  stop('Please input at least two HPO IDs')
+if (length(args) == 0){
+  stop('Please provide HPO ID/s')
 }
 
 library(ontologyPlot)
@@ -40,9 +40,15 @@ pdf(file = my_outfile)
 
 onto_plot(hpo, terms = my_hpo_ancestor, fillcolor = my_colour)
 
+if (length(args) == 1){
+  dev.off()
+  quit()
+}
+
 my_hpo_ancestor_no_link <- remove_links(hpo, my_hpo_ancestor)
 my_colour <- as.numeric(my_hpo_ancestor_no_link %in% my_hpo)
 my_colour <- ifelse(my_colour == 1, yes = '#BEBADA', no = '#8DD3C7')
 onto_plot(hpo, terms = my_hpo_ancestor_no_link, fillcolor = my_colour)
-
 dev.off()
+quit()
+
