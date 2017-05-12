@@ -23,10 +23,16 @@ library(ontologyIndex)
 
 my_hpo <- args
 
+# use the HPO terms provided by the package
 # data(hpo)
-# use HPO file in data directory
-hpo <- get_ontology(file = "../data/hp.obo.gz")
 
+# or use HPO terms provided by own OBO file
+# http://stackoverflow.com/questions/1815606/rscript-determine-path-of-the-executing-script
+initial.options <- commandArgs(trailingOnly = FALSE)
+file.arg.name <- "--file="
+script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
+script.basename <- dirname(script.name)
+hpo <- get_ontology(file = paste(script.basename, "/../data/hp.obo.gz", sep=''))
 my_hpo_ancestor <- get_ancestors(hpo, my_hpo)
 
 my_colour <- as.numeric(my_hpo_ancestor %in% my_hpo)
