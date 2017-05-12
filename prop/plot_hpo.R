@@ -22,7 +22,11 @@ library(ontologyPlot)
 library(ontologyIndex)
 
 my_hpo <- args
-data(hpo)
+
+# data(hpo)
+# use HPO file in data directory
+hpo <- get_ontology(file = "../data/hp.obo.gz")
+
 my_hpo_ancestor <- get_ancestors(hpo, my_hpo)
 
 my_colour <- as.numeric(my_hpo_ancestor %in% my_hpo)

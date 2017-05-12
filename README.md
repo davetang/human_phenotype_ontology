@@ -15,7 +15,7 @@ The association of HPO terms to disorders allows potential disorders to be ident
 
 # Organisation of this repository
 
-There are five directories in this repository.
+There are several directories in this repository; below is a brief description.
 
 * cluster - cluster analysis on OMIM phenotypes
 * data - contains the data used for the scripts
