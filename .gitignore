@@ -3,3 +3,4 @@ exomiser-cli-7.2.1*
 *.Rhistory
 cluster/*.pdf
 cluster/*.txt
+cluster/*.tsv
